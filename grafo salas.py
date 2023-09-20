@@ -9,20 +9,22 @@ path_edges = os.path.join('Datos', "datos grafo salas.xlsx")
 
 def crear_grafo(path_edges, path_nodos):
     """cargar excel y arreglar nodos"""
-    edgelist = pd.read_excel(path_edges)
+    edgelist_pl = pl.read_excel(path_edges)
     nodelist_pl = pl.read_excel(path_nodos)
     new_columns = {col: col.strip() for col in nodelist_pl.columns}
-    nodelist_pl = (nodelist_pl.rename(new_columns).drop('Location Formal Name').drop('Campus Partition'))
+    nodelist_pl = (nodelist_pl.rename(new_columns).drop('Location Formal Name').drop('Campus Partition').filter(pl.col("Max Capacity") >= 20))
+    edgelist_pl = (edgelist_pl.filter(pl.col("distancia") != 0))
     lista = []
     for item in nodelist_pl.to_pandas()['Location Name'].values:
         lista.append(item[3:])
     nueva_col = pl.Series(lista)
     nodelist_pl.replace('Location Name', nueva_col)
     nodelist_pd = nodelist_pl.to_pandas()
+    edgelist_pd = edgelist_pl.to_pandas()
 
     """Crear Grafo"""
     g = nx.Graph()
-    for i, elrow in edgelist.iterrows():
+    for i, elrow in edgelist_pd.iterrows():
         g.add_edge(elrow[0], elrow[1], attr_dict=elrow[2:].to_dict())
     for i, nlrow in nodelist_pd.iterrows():
         g.add_node(nlrow[0], capacidad=nlrow[1])
