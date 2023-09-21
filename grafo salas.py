@@ -12,7 +12,14 @@ def crear_grafo(path_edges, path_nodos):
     edgelist_pl = pl.read_excel(path_edges)
     nodelist_pl = pl.read_excel(path_nodos)
     new_columns = {col: col.strip() for col in nodelist_pl.columns}
-    nodelist_pl = (nodelist_pl.rename(new_columns).drop('Location Formal Name').drop('Campus Partition').filter(pl.col("Max Capacity") >= 20))
+    # Se sacan las salas de educación, teología y citeduc, y las con menos de 20 de capacidad
+    # solo se dejan las columnas de nombre y capacidad
+    nodelist_pl = (nodelist_pl.rename(new_columns).drop('Location Formal Name')
+                   .filter(pl.col("Campus Partition") != '11-Educacion_Ed')
+                   .filter(pl.col("Campus Partition") != '12-Educacion_T')
+                   .filter(pl.col("Campus Partition") != '53-Salas_Citeduc')
+                   .filter(pl.col("Campus Partition") != '55-Salas_Teologia')
+                   .drop('Campus Partition').filter(pl.col("Max Capacity") >= 20))
     edgelist_pl = (edgelist_pl.filter(pl.col("distancia") != 0))
     lista = []
     for item in nodelist_pl.to_pandas()['Location Name'].values:
