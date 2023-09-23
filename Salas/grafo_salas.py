@@ -5,7 +5,8 @@ import os
 import matplotlib.pyplot as plt
 path_nodos = os.path.join('Datos', "Salas SJ 2023-07-13.xlsx")
 path_edges = os.path.join('Datos', "datos grafo salas.xlsx")
-
+path_excel_creado = os.path.join('Salas','datos', "salas.csv")
+path_excel_creado2 = os.path.join('Salas','datos', "distancias.csv")
 
 def crear_grafo(path_edges, path_nodos):
     """cargar excel y arreglar nodos"""
@@ -26,6 +27,7 @@ def crear_grafo(path_edges, path_nodos):
         lista.append(item[3:])
     nueva_col = pl.Series(lista)
     nodelist_pl.replace('Location Name', nueva_col)
+    nodelist_pl.write_csv(path_excel_creado)
     nodelist_pd = nodelist_pl.to_pandas()
     edgelist_pd = edgelist_pl.to_pandas()
 
@@ -40,9 +42,10 @@ def crear_grafo(path_edges, path_nodos):
     # print(list(g.edges(data=True))[0:40])
     # print(list(g.nodes(data=True))[0:40])
 
-    plt.figure(figsize=(8, 6))
-    nx.draw(g, edge_color=edge_colors, node_size=10, node_color='black', with_labels=True, font_size=5)
-    plt.show()
+    # plt.figure(figsize=(8, 6))
+    # nx.draw(g, edge_color=edge_colors, node_size=10, node_color='black', with_labels=True, font_size=5)
+    # plt.show()
+    return g
 
 
 crear_grafo(path_edges, path_nodos)
