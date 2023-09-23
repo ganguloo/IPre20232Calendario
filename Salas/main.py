@@ -2,6 +2,13 @@ from gurobipy import GRB, Model, quicksum
 from carga_datos.cursos import curso
 from carga_datos.salas import capacidad_salas
 from carga_datos.preprocessing import salas, cursos
+from grafo_salas import crear_grafo
+import os
+import networkx as nx
+
+path_nodos = os.path.join('Datos', "Salas SJ 2023-07-13.xlsx")
+path_edges = os.path.join('Datos', "datos grafo salas.xlsx")
+G = crear_grafo(path_edges, path_nodos)
 
 m = Model()
 m.setParam("TimeLimit", 10)
@@ -13,14 +20,12 @@ S = range(1, 20 + 1) # salas
 S_1 = range(1, 20 + 1) # salas auxiliar
 
 
-
 # IMPORT PARAMS
 nombres = curso("nombres")
 vacantes = curso("vacantes")
 particion_maxima = curso("particion")
 capacidad = capacidad_salas("capacidad")
 nombre_sala = capacidad_salas("name")
-
 
 
 # PARAMS
@@ -45,7 +50,7 @@ m.addConstrs((X[c, s1] + X[c, s2] <= Y[c, s1, s2] + 1 for c in C for s1 in S for
 m.addConstrs((quicksum(X[c, s] * capacidad[s] for s in S) >= 2 * Vacantes[c] for c in C), name="Asignacion")
 
 m.update()
-
+nx.shortest_path_length(G,source=s1,target=s2)
 objetivo = quicksum(quicksum(d[s1, s2] * Y[c, s1, s2] for s1 in S for s2 in S if (s1 != s2)) for c in C)
 m.setObjective(objetivo, GRB.MINIMIZE)
 m.optimize()
