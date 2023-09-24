@@ -9,13 +9,13 @@ path_nodos = os.path.join('Datos', "Salas SJ 2023-07-13.xlsx")
 path_edges = os.path.join('Datos', "datos grafo salas.xlsx")
 G = crear_grafo(path_edges, path_nodos)
 m = Model()
-m.setParam("TimeLimit", 600)
+m.setParam("TimeLimit", 3600*4)
 
 # SETS
 
 C = range(1, 5 + 1)  # curso
-S = range(1, 196) # salas
-S_1 = range(1, 196) # salas auxiliar
+S = range(1, 196)  # salas
+S_1 = range(1, 196)  # salas auxiliar
 
 
 # IMPORT PARAMS
