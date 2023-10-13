@@ -34,13 +34,13 @@ def crear_grafo(path_edges, path_nodos):
     """Crear Grafo"""
     g = nx.Graph()
     for i, elrow in edgelist_pd.iterrows():
-        g.add_edge(elrow[0], elrow[1], attr_dict=elrow[2:].to_dict())
+        g.add_edge(elrow[0], elrow[1], weight=elrow[2])
     for i, nlrow in nodelist_pd.iterrows():
         g.add_node(nlrow[0], capacidad=nlrow[1])
 
-    edge_colors = [e[2]['attr_dict']['color'] for e in list(g.edges(data=True))]
+    # edge_colors = [e[2]['w']['color'] for e in list(g.edges(data=True))]
     # print(list(g.edges(data=True))[0:40])
-    # print(list(g.nodes(data=True))[0:40])
+    # print(list(g.nodes(data=True)))
 
     # plt.figure(figsize=(8, 6))
     # nx.draw(g, edge_color=edge_colors, node_size=10, node_color='black', with_labels=True, font_size=5)
@@ -50,4 +50,3 @@ def crear_grafo(path_edges, path_nodos):
 
 crear_grafo(path_edges, path_nodos)
 
-# falta borrar de nodelist las salas con poca capacidad

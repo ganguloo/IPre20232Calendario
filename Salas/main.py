@@ -9,7 +9,7 @@ path_nodos = os.path.join('Datos', "Salas SJ 2023-07-13.xlsx")
 path_edges = os.path.join('Datos', "datos grafo salas.xlsx")
 G = crear_grafo(path_edges, path_nodos)
 m = Model()
-m.setParam("TimeLimit", 600)
+m.setParam("TimeLimit", 2*3600)
 
 
 # IMPORT PARAMS
@@ -51,7 +51,7 @@ m.addConstrs((quicksum(X[c, s] * capacidad[s] for s in S) >= 2 * Vacantes[c] for
 
 m.update()
 # nx.shortest_path_length(G,source=s1,target=s2)
-objetivo = quicksum(quicksum(nx.shortest_path_length(G, source=nombre_sala[s1], target=nombre_sala[s2])* Y[c, s1, s2] for s1 in S for s2 in S if (s1 != s2)) for c in C)
+objetivo = quicksum(quicksum(nx.shortest_path_length(G, source=nombre_sala[s1], target=nombre_sala[s2], weight='weight')* Y[c, s1, s2] for s1 in S for s2 in S if (s1 != s2)) for c in C)
 m.setObjective(objetivo, GRB.MINIMIZE)
 m.optimize()
 valor_objetivo = m.ObjVal
@@ -62,4 +62,4 @@ print("\n"+"-"*10+" Manejo Soluciones "+"-"*10)
 for c in C:
     for s in S:
         if X[c, s].x == 1:
-            print(f"EL curso {nombres[c]} utiliza la sala {nombre_sala[s]}")
+            print(f"El curso {nombres[c]} utiliza la sala {nombre_sala[s]}")
