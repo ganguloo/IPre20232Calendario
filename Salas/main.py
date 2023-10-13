@@ -9,7 +9,7 @@ path_nodos = os.path.join('Datos', "Salas SJ 2023-07-13.xlsx")
 path_edges = os.path.join('Datos', "datos grafo salas.xlsx")
 G = crear_grafo(path_edges, path_nodos)
 m = Model()
-m.setParam("TimeLimit", 3600*6)
+m.setParam("TimeLimit", 600)
 
 
 # IMPORT PARAMS
@@ -21,15 +21,15 @@ nombre_sala = capacidad_salas("name")
 
 # SETS
 
-C = range(1, len(nombres) + 1)  # curso
-S = range(1, 196)  # salas
-S_1 = range(1, 196)  # salas auxiliar
+C = range(len(nombres))  # curso
+S = range(193)  # salas
+S_1 = range(193)  # salas auxiliar
 
 
 # PARAMS
-Vacantes = {(c): vacantes[c - 1] for c in C}
-Particion = {(c): particion_maxima[c - 1] for c in C}
-Tamano = {(s): capacidad[s - 1] for s in S}
+Vacantes = {(c): vacantes[c] for c in C}
+Particion = {(c): particion_maxima[c] for c in C}
+Tamano = {(s): capacidad[s] for s in S}
 Distancia = {}
 
 
