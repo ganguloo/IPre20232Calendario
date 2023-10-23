@@ -22,7 +22,7 @@ escribir = []
 for dia in setinfo:
 
     m = Model()
-    m.setParam("TimeLimit", 100)
+    m.setParam("TimeLimit", 3600)
 
 
     # IMPORT PARAMS
