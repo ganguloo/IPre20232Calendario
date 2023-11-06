@@ -37,7 +37,8 @@ def main(crear_parametros_ies=True, crear_parametros_fechas=True):
                         level=logging.DEBUG, filemode="w")
     
     # -------- MACROSECCIONES CURSOS Y SECCIONES COORDINADAS ---------
-    coordinados_a_macrosecciones(PATH_CURSOS_IES,PATH_LISTADO_NRC,CURSOS_COORDINADOS,SEC_COORDINADAS)
+    if crear_parametros_ies:
+        coordinados_a_macrosecciones(PATH_CURSOS_IES,PATH_LISTADO_NRC,CURSOS_COORDINADOS,SEC_COORDINADAS)
     PATH_CURSOS_IES_1 = os.path.join("excel_horarios", "Prueba_ies.xlsx")
     PATH_LISTADO_NRC_1 = os.path.join("excel_horarios", "Prueba_nrc.xlsx")
 
@@ -166,4 +167,4 @@ def main(crear_parametros_ies=True, crear_parametros_fechas=True):
 
 
 if __name__ == "__main__":
-    main(crear_parametros_ies=True, crear_parametros_fechas=True)
+    main(crear_parametros_ies=False, crear_parametros_fechas=True)
