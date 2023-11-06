@@ -4,11 +4,10 @@ PATH_LISTADO_NRC = os.path.join("excel_horarios",
                                  "Listado_NRC_2023_Enero.xlsx")
 PATH_VACANTES = os.path.join("instancia_datos", "vacantes.xlsx")
 PATH_CONEXIONES = os.path.join("instancia_datos", "conexiones.xlsx")
-PATH_CURSOS_IES = os.path.join(
-        "excel_horarios", "004 - Listado_NRC_Programados.xlsx")
 # PATH_CURSOS_IES = os.path.join(
-#     "excel_horarios", "004-filtrado.xlsx")
-
+#         "excel_horarios", "004 - Listado_NRC_Programados.xlsx")
+PATH_CURSOS_IES = os.path.join(
+    "excel_horarios", "004-filtrado.xlsx")
 
 PATH_MATERIAS = os.path.join("excel_horarios", "Listado_materias.xlsx")
 PATH_LISTADO_CURSOS = os.path.join("instancia_datos", "listado_cursos.xlsx")

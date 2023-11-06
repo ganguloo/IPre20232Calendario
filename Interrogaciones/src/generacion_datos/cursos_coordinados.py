@@ -38,9 +38,9 @@ def coordinados_a_macrosecciones(path_cursos_ies,path_listado_nrc,cursos_coordin
 
         df = pd.DataFrame(excel, columns = header)
         if iterador == 0 :
-            df.to_excel("Prueba_nrc.xlsx",index = False) #Hay que crear carpeta aparte para esto
+            df.to_excel("./excel_horarios/Prueba_nrc.xlsx",index = False) #Hay que crear carpeta aparte para esto
         else :
-            df.to_excel("Prueba_ies.xlsx",index = False, sheet_name= "Deben tener Ies") #Hay que crear una carpeta aparte
+            df.to_excel("./excel_horarios/Prueba_ies.xlsx",index = False, sheet_name= "Deben tener Ies") #Hay que crear una carpeta aparte
 
         iterador += 1
 
