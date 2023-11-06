@@ -15,10 +15,14 @@ with open(path_output) as archivo:
     info = archivo.readlines()[1:]
 info = [x.strip("\n").split(";") for x in info]
 setinfo = []
+secciones = {}
 for linea in info:
     if linea[3] not in setinfo:
         setinfo.append(linea[3])
+    secciones[linea[0]] = linea[1]
 escribir = []
+salas = []
+escribir.append('Curso;Secciones;Fecha;Sala;N°')
 for dia in setinfo:
 
     m = Model()
@@ -75,10 +79,13 @@ for dia in setinfo:
     print("\n"+"-"*10+dia+"-"*10)
 
     for c in C:
+        salas = []
         for s in S:
             if X[c, s].x == 1:
-                print(f"El curso {nombres[c]} utiliza la sala {nombre_sala[s]} para I{num[c]}")
-                new = f'{nombres[c]};{dia};{nombre_sala[s]};I{num[c]}'
-                escribir.append(new)
+                salas.append(nombre_sala[s])
+        salas = ','.join(salas)
+        print(f"El curso {nombres[c]} | {secciones[nombres[c]]} utiliza las salas {salas} para I{num[c]}")
+        new = f'{nombres[c]};{secciones[nombres[c]]};{dia};{salas};I{num[c]}'
+        escribir.append(new)
 with open(os.path.join('Salas', 'datos', "Resultados.csv"), 'w') as arc:
     arc.write('\n'.join(escribir))
