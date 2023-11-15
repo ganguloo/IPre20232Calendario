@@ -4,10 +4,10 @@ PATH_LISTADO_NRC = os.path.join("excel_horarios",
                                  "Listado_NRC_2023_Enero.xlsx")
 PATH_VACANTES = os.path.join("instancia_datos", "vacantes.xlsx")
 PATH_CONEXIONES = os.path.join("instancia_datos", "conexiones.xlsx")
-# PATH_CURSOS_IES = os.path.join(
-#         "excel_horarios", "004 - Listado_NRC_Programados.xlsx")
 PATH_CURSOS_IES = os.path.join(
-    "excel_horarios", "004-filtrado.xlsx")
+        "excel_horarios", "004 - Listado_NRC_Programados.xlsx")
+# PATH_CURSOS_IES = os.path.join(
+#     "excel_horarios", "004-filtrado.xlsx")
 
 PATH_MATERIAS = os.path.join("excel_horarios", "Listado_materias.xlsx")
 PATH_LISTADO_CURSOS = os.path.join("instancia_datos", "listado_cursos.xlsx")
@@ -26,7 +26,7 @@ FECHAS_PROHIBIDAS_MARZO_GENERAL = ["06-Mar", "07-Mar", "08-Mar", "09-Mar", "10-M
                                    "26-Mar", "27-Mar", "28-Mar", "29-Mar", "30-Mar",
                                    ]
 
-FECHAS_PROHIBIDAS_ABRIL_GENERAL = ["02-Apr", "04-Apr", "05-Apr", "06-Apr", "09-Apr",
+FECHAS_PROHIBIDAS_ABRIL_GENERAL = ["02-Apr", "03-Apr", "04-Apr", "05-Apr", "06-Apr", "09-Apr",
                                    "10-Apr", "11-Apr", "12-Apr", "16-Apr", "23-Apr",
                                    "30-Apr"]
 

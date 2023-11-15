@@ -167,4 +167,4 @@ def main(crear_parametros_ies=True, crear_parametros_fechas=True):
 
 
 if __name__ == "__main__":
-    main(crear_parametros_ies=False, crear_parametros_fechas=True)
+    main(crear_parametros_ies=True, crear_parametros_fechas=True)
