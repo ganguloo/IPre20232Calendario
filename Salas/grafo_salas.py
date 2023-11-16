@@ -3,10 +3,10 @@ import pandas as pd
 import networkx as nx
 import os
 import matplotlib.pyplot as plt
+from copy import deepcopy
 path_nodos = os.path.join('Datos', "Salas SJ 2023-07-13.xlsx")
 path_edges = os.path.join('Datos', "datos grafo salas.xlsx")
 path_excel_creado = os.path.join('Salas','datos', "salas.csv")
-path_excel_creado2 = os.path.join('Salas','datos', "distancias.csv")
 
 def crear_grafo(path_edges, path_nodos):
     """cargar excel y arreglar nodos"""
@@ -27,16 +27,18 @@ def crear_grafo(path_edges, path_nodos):
         lista.append(item[3:])
     nueva_col = pl.Series(lista)
     nodelist_pl.replace('Location Name', nueva_col)
-    nodelist_pl.write_csv(path_excel_creado)
     nodelist_pd = nodelist_pl.to_pandas()
     edgelist_pd = edgelist_pl.to_pandas()
-
+    nodelist_pdcopy = deepcopy(nodelist_pd)
     """Crear Grafo"""
     g = nx.Graph()
     for i, elrow in edgelist_pd.iterrows():
         g.add_edge(elrow[0], elrow[1], weight=elrow[2])
-    for i, nlrow in nodelist_pd.iterrows():
-        g.add_node(nlrow[0], capacidad=nlrow[1])
+    for i, nlrow in nodelist_pdcopy.iterrows():
+        g.add_node(nlrow[0])
+
+    nodelist_pd.drop(nodelist_pd[nodelist_pd['Available'] == 'F'].index, inplace = True)  #  Elimina salas no disponibles
+    nodelist_pd.to_csv(path_excel_creado)
 
     # edge_colors = [e[2]['w']['color'] for e in list(g.edges(data=True))]
     # print(list(g.edges(data=True))[0:40])

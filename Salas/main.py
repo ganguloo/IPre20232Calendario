@@ -4,12 +4,21 @@ from carga_datos.salas import capacidad_salas
 from grafo_salas import crear_grafo
 import os
 import networkx as nx
+import polars as pl
 
 path_nodos = os.path.join('Datos', "Salas SJ 2023-07-13.xlsx")
 path_edges = os.path.join('Datos', "datos grafo salas.xlsx")
-path_cursos = os.path.join('datos', "")
+path_prioridades = os.path.join('Salas', 'datos', "salas.csv")
 path_output = os.path.join('Salas', 'datos', "output.csv")
 G = crear_grafo(path_edges, path_nodos)
+
+prioridades = pl.read_csv(path_prioridades)
+sala_prioridades = prioridades.to_pandas()["Location Name"].values
+num_prioridades = prioridades.to_pandas()["Priority"].values
+Prioridad = {}
+for i in range(len(num_prioridades)):
+    Prioridad[sala_prioridades[i]] = int(num_prioridades[i])
+setprioridades = set(Prioridad.values())
 
 with open(path_output) as archivo:
     info = archivo.readlines()[1:]
@@ -23,55 +32,65 @@ for linea in info:
 escribir = []
 salas = []
 escribir.append('Curso;Secciones;Fecha;Sala;N°')
+
 for dia in setinfo:
+    unresolve = True
+    p = 0
+    while unresolve and p <= len(setprioridades)-1:
 
-    m = Model()
-    m.setParam("TimeLimit", 3600)
+        m = Model()
+        m.setParam("TimeLimit", 3600)
 
+        # IMPORT PARAMS
+        nombres = curso("nombres", dia)
+        num = curso("num", dia)
+        vacantes = curso("vacantes", dia)
+        particion_maxima = curso("particion", dia)
+        capacidad = capacidad_salas("capacidad")
+        nombre_sala = capacidad_salas("name")
+        for salaa in list(nombre_sala):
+            if Prioridad[salaa] > p:
+                nombre_sala.remove(salaa)
 
-    # IMPORT PARAMS
-    nombres = curso("nombres", dia)
-    num = curso("num", dia)
-    vacantes = curso("vacantes", dia)
-    particion_maxima = curso("particion", dia)
-    capacidad = capacidad_salas("capacidad")
-    nombre_sala = capacidad_salas("name")
+        # SETS
 
-    # SETS
-
-    C = range(len(nombres))  # curso
-    S = range(193)  # salas
-    S_1 = range(193)  # salas auxiliar
-
-
-    # PARAMS
-    Vacantes = {(c): vacantes[c] for c in C}
-    Particion = {(c): particion_maxima[c] for c in C}
-    Tamano = {(s): capacidad[s] for s in S}
-    Distancia = {}
+        C = range(len(nombres))  # curso
+        S = range(len(nombre_sala))  # salas
+        S_1 = range(len(nombre_sala))  # salas auxiliar
 
 
-    # Coloque aca sus variables
-    X = m.addVars(C, S, vtype=GRB.BINARY, name="X_cs")  # Si el curso c utiliza la sala s
-    Y = m.addVars(C, S, S_1, vtype=GRB.BINARY, name="Y_cs1s2")  # Si el cursos c utiliza las salas s1 y s2
-    m.update()
+        # PARAMS
+        Vacantes = {(c): vacantes[c] for c in C}
+        Particion = {(c): particion_maxima[c] for c in C}
+        Tamano = {(s): capacidad[s] for s in S}
 
-    # Evitar que un cuirso sea dividido en muchas salas chicas
-    m.addConstrs((quicksum(X[c, s] for s in S) <= Particion[c] for c in C), name="Granularidad")
 
-    # Relación de variables
-    m.addConstrs((X[c, s1] + X[c, s2] <= Y[c, s1, s2] + 1 for c in C for s1 in S for s2 in S_1 if (s1 != s2)), name="Relacion")
+        # Coloque aca sus variables
+        X = m.addVars(C, S, vtype=GRB.BINARY, name="X_cs")  # Si el curso c utiliza la sala s
+        Y = m.addVars(C, S, S_1, vtype=GRB.BINARY, name="Y_cs1s2")  # Si el cursos c utiliza las salas s1 y s2
+        m.update()
 
-    m.addConstrs((quicksum(X[c, s] for c in C) <= 1  for s in S), name="Relacion_2")
+        # Evitar que un cuirso sea dividido en muchas salas chicas
+        m.addConstrs((quicksum(X[c, s] for s in S) <= Particion[c] for c in C), name="Granularidad")
 
-    # Todos los alumnos deben ser asignados a alguna sala respetando las capacidades de una prueba (mitad)
-    m.addConstrs((quicksum(X[c, s] * capacidad[s] for s in S) >= 2 * Vacantes[c] for c in C), name="Asignacion")
+        # Relación de variables
+        m.addConstrs((X[c, s1] + X[c, s2] <= Y[c, s1, s2] + 1 for c in C for s1 in S for s2 in S_1 if (s1 != s2)), name="Relacion")
 
-    m.update()
-    # nx.shortest_path_length(G,source=s1,target=s2)
-    objetivo = quicksum(quicksum(nx.shortest_path_length(G, source=nombre_sala[s1], target=nombre_sala[s2], weight='weight')* Y[c, s1, s2] for s1 in S for s2 in S if (s1 != s2)) for c in C)
-    m.setObjective(objetivo, GRB.MINIMIZE)
-    m.optimize()
+        m.addConstrs((quicksum(X[c, s] for c in C) <= 1  for s in S), name="Relacion_2")
+
+        # Todos los alumnos deben ser asignados a alguna sala respetando las capacidades de una prueba (mitad)
+        m.addConstrs((quicksum(X[c, s] * capacidad[s] for s in S) >= 2 * Vacantes[c] for c in C), name="Asignacion")
+
+        m.update()
+        # nx.shortest_path_length(G,source=s1,target=s2)
+        objetivo = quicksum(quicksum(nx.shortest_path_length(G, source=nombre_sala[s1], target=nombre_sala[s2], weight='weight') * Y[c, s1, s2] for s1 in S for s2 in S if (s1 != s2)) for c in C)
+        m.setObjective(objetivo, GRB.MINIMIZE)
+        m.optimize()
+        estado = m.status
+        if estado != 2:
+            p += 1
+        elif estado == 2:
+            unresolve = False
     valor_objetivo = m.ObjVal
 
     # Muestra los valores de las soluciones

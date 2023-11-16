@@ -1,5 +1,3 @@
-
-
 def curso(criterio, dia):
     archivo = open("Salas/datos/output.csv")
     info = archivo.readlines()[1:]
