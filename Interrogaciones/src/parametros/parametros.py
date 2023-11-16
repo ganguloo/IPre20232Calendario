@@ -12,10 +12,10 @@ PATH_CURSOS_IES = os.path.join(
 PATH_MATERIAS = os.path.join("excel_horarios", "Listado_materias.xlsx")
 PATH_LISTADO_CURSOS = os.path.join("instancia_datos", "listado_cursos.xlsx")
 
-NUM_EXPERIMENTO = 2
+NUM_EXPERIMENTO = 1
 
 
-IDENTIFICADORES_FMAT = ["MAT1640", "MAT1630", "MAT1620", "MAT1610","MAT1207","EYP1113"]
+IDENTIFICADORES_FMAT = ["MAT1640", "MAT1630", "MAT1620", "MAT1610","MAT1207","EYP1113", "MAT1203"]
 #["EYP_MOD", "XN_MOD",
 #                        "WV_MOD", "YF_MOD", "GCH_MOD", "ED_MOD"]
 
@@ -26,7 +26,7 @@ FECHAS_PROHIBIDAS_MARZO_GENERAL = ["06-Mar", "07-Mar", "08-Mar", "09-Mar", "10-M
                                    "26-Mar", "27-Mar", "28-Mar", "29-Mar", "30-Mar",
                                    ]
 
-FECHAS_PROHIBIDAS_ABRIL_GENERAL = ["02-Apr", "03-Apr", "04-Apr", "05-Apr", "06-Apr", "09-Apr",
+FECHAS_PROHIBIDAS_ABRIL_GENERAL = ["02-Apr", "04-Apr", "05-Apr", "06-Apr", "09-Apr",
                                    "10-Apr", "11-Apr", "12-Apr", "16-Apr", "23-Apr",
                                    "30-Apr"]
 
@@ -98,11 +98,13 @@ CURSOS_COORDINADOS = ["MAT1640","MAT1207","MAT1203","ICH1104","QIM200","EYP1113"
 
 SEC_COORDINADAS = [["ICS3313","2","3"],["ICS3413","2","3"],["ICS2523","1","2"]]
 
-CURSOS_3_IES = ["MAT1640_Coordinado - Macroseccion","MAT1630_Coordinado - Macroseccion","MAT1620_Coordinado - Macroseccion","MAT1610_Coordinado - Macroseccion"
+CURSOS_3_IES = ["MAT1640_Coordinado - Macroseccion","MAT1630_Coordinado - Macroseccion","MAT1620_Coordinado - Macroseccion","MAT1610_Coordinado - Macroseccion",
                 "MAT1203_Coordinado - Macroseccion","EYP1113_Coordinado - Macroseccion"]
 #["EYP_MOD_MS1 - Macroseccion 1", "XN_MOD_MS1 - Macroseccion 1", "YF_MOD_MS1 - Macroseccion 1", "GCH_MOD_MS1 - Macroseccion 1", 
                 #"ED_MOD_MS1 - Macroseccion 1", "WV_MOD_MS1 - Macroseccion 1"]
 
+
+DIA_FECHA_RETIRO_CURSOS = ""
 
 #Algunos parametros del modelo
 DELTAMIN = 28
