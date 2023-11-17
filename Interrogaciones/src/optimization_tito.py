@@ -32,7 +32,7 @@ fechas_validas_cliques, mapeo_fechas, *placeholder = generacion_calendario()
 fechas_calendario_cliques = list(fechas_validas_cliques.keys())
 
 #dia_retiro = MAPEO(DIA_FECHA_RETIRO_CURSOS) 
-dia_retiro = 40
+dia_retiro = 60
 
 arcos = cargar_arcos()
 cursos = cargar_cursos()
@@ -151,7 +151,7 @@ for grupo in GRUPOS_M :
 model.addConstrs(x[curso,dia,interrogacion] == 1 for (curso,dia,interrogacion) in PRUEBAS_PREASIGNADAS)
 
 #No permite cursos que sólo asignen una de sus pruebas
-model.addConstrs(quicksum(z[curso,interrogacion] for i in CONJUNTO_INTERROGACIONES[curso]) == len(CONJUNTO_INTERROGACIONES[curso])*z[curso, 1] for curso in cursos)
+model.addConstrs(quicksum(z[curso,interrogacion] for interrogacion in CONJUNTO_INTERROGACIONES[curso]) == len(CONJUNTO_INTERROGACIONES[curso])*z[curso, 1] for curso in cursos)
 
 #
 
@@ -163,7 +163,9 @@ model.write("modelo.lp")
 model.setObjectiveN(quicksum(z[curso, interrogacion] * vacantes[curso] for curso in cursos for interrogacion in CONJUNTO_INTERROGACIONES[curso]), 
                     index = 0, priority = 2, name = "Obj1" )
 
-model.setObjectiveN(quicksum(x[curso,dia,1]*vacantes[curso] for curso in cursos for dia in fechas_calendario[curso] if dia >= dia_retiro),
+# model.setObjectiveN(quicksum(x[curso,dia,1]*vacantes[curso] for curso in cursos for dia in fechas_calendario[curso] if dia >= dia_retiro),
+#                     index = 1, priority = 1, name = "Obj2")
+model.setObjectiveN(quicksum(x[curso,dia,1]*dia for curso in cursos for dia in fechas_calendario[curso] if dia >= dia_retiro),
                     index = 1, priority = 1, name = "Obj2")
 
 model.optimize()
