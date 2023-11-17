@@ -12,12 +12,11 @@ PATH_CURSOS_IES = os.path.join(
 PATH_MATERIAS = os.path.join("excel_horarios", "Listado_materias.xlsx")
 PATH_LISTADO_CURSOS = os.path.join("instancia_datos", "listado_cursos.xlsx")
 
-NUM_EXPERIMENTO = 1
+NUM_EXPERIMENTO = 2
 
 
 IDENTIFICADORES_FMAT = ["MAT1640", "MAT1630", "MAT1620", "MAT1610","MAT1207","EYP1113", "MAT1203"]
-#["EYP_MOD", "XN_MOD",
-#                        "WV_MOD", "YF_MOD", "GCH_MOD", "ED_MOD"]
+# IDENTIFICADORES_FMAT = ["EYP_MOD", "XN_MOD", "WV_MOD", "YF_MOD", "GCH_MOD", "ED_MOD"]
 
 FECHAS_PROHIBIDAS_MARZO_GENERAL = ["06-Mar", "07-Mar", "08-Mar", "09-Mar", "10-Mar",
                                    "11-Mar", "12-Mar", "13-Mar", "14-Mar", "15-Mar",
