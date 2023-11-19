@@ -9,7 +9,7 @@ import polars as pl
 path_nodos = os.path.join('Datos', "Salas SJ 2023-07-13.xlsx")
 path_edges = os.path.join('Datos', "datos grafo salas.xlsx")
 path_prioridades = os.path.join('Salas', 'datos', "salas.csv")
-path_output = os.path.join('Salas', 'datos', "output.csv")
+path_output = os.path.join('Interrogaciones', 'src', "output.csv")
 G = crear_grafo(path_edges, path_nodos)
 
 prioridades = pl.read_csv(path_prioridades)
@@ -31,7 +31,7 @@ for linea in info:
     secciones[linea[0]] = linea[1]
 escribir = []
 salas = []
-escribir.append('Curso;Secciones;Fecha;Sala;N°')
+escribir.append('Curso;Secciones;Fecha;Sala;N°;Cantidad Salas')
 
 for dia in setinfo:
     unresolve = True
@@ -102,9 +102,10 @@ for dia in setinfo:
         for s in S:
             if X[c, s].x == 1:
                 salas.append(nombre_sala[s])
+        cantidad = len(salas)
         salas = ','.join(salas)
         print(f"El curso {nombres[c]} | {secciones[nombres[c]]} utiliza las salas {salas} para I{num[c]}")
-        new = f'{nombres[c]};{secciones[nombres[c]]};{dia};{salas};I{num[c]}'
+        new = f'{nombres[c]};{secciones[nombres[c]]};{dia};{salas};I{num[c]};{cantidad}'
         escribir.append(new)
 with open(os.path.join('Salas', 'datos', "Resultados.csv"), 'w') as arc:
     arc.write('\n'.join(escribir))
