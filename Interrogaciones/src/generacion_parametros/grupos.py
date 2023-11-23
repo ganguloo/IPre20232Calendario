@@ -1,14 +1,7 @@
 import os
 import pandas as pd
 from parametros.cursos_ies import CONJUNTO_INTERROGACIONES
-
-GRUPOS = [["MAT1620","FIS1514","IIC1103"],["MAT1620","ICE1514","IIC1103"],["MAT1630","FIS1523","MAT1640"],["MAT1630","IIQ1003","MAT1640"],
-          ["MAT1630","ICM1003","MAT1640"],["EYP1113","FIS1533","ICS1513"],["EYP1113","IEE1533","ICS1513"],["FIS1514","FIS1523","FIS1533"],
-          ["FIS1514","IIQ1003","FIS1533"],["FIS1514","ICM1003","FIS1533"],["FIS1514","FIS1523","IEE1533"],["FIS1514","IIQ1003","IEE1533"],
-          ["FIS1514","ICM1003","IEE1533"],["IIC1253","IIC2233","IIC2343","MAT1610"],["MAT1610","MAT1203","QUIM100E"],
-          ["IIC1103","IIC1001","MAT1107","MAT1207"]]
-PATH_CURSOS_IES = os.path.join(
-    "excel_horarios", "004 - Listado_NRC_Programados.xlsx")
+from parametros.parametros import GRUPOS
 
 def sort_secciones(a) :
     if 'Macroseccion' in a :
@@ -105,7 +98,5 @@ def completar_grupos_cursos_ies(cursos = CONJUNTO_INTERROGACIONES, grupos = GRUP
     archivo.write(f'GRUPOS_M = {grupos_txt}')
     #print('Se creo correctamente el archivo "grupos_modelo.py"')
     return grupos_nuevo
-
-completar_grupos_cursos_ies(CONJUNTO_INTERROGACIONES,GRUPOS)
 
 #No se para que esta el grupos_ies, es mejor grupos_cursos

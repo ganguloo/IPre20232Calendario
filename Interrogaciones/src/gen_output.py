@@ -52,7 +52,7 @@ with open("output.csv", "w", encoding="utf-8") as file:
 #     for curso in macrosecciones[macroseccion]:
 #         print(curso, vacantes_sigla_seccion[curso])
 #     print()
-print(macrosecciones)
+# print(macrosecciones)
 
 # print(fechas_actualizado)
 
