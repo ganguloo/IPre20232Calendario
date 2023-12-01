@@ -16,14 +16,23 @@ from modelo_optimizacion.cargar_datos.cargar_colores import datos_colores_grafo
 from parametros.cursos_ies import CONJUNTO_INTERROGACIONES
 from parametros.cursos_fechas import CONJUNTO_FECHAS
 
-from parametros.parametros import NUM_EXPERIMENTO
+from parametros.parametros import (NUM_EXPERIMENTO, DELTA_DIAS, GRUPOS, DELTAMIN,
+                                   DELTAMAX,VACANTES,PRUEBAS_PREASIGNADAS, DIA_FECHA_RETIRO_CURSOS)
+
+#No se debe importar entremedio pero es la solucion rapida
+from generacion_parametros.grupos import completar_grupos_cursos_ies
+
+completar_grupos_cursos_ies(CONJUNTO_INTERROGACIONES,GRUPOS)
+
+from parametros.grupos_modelo import GRUPOS_M
 
 
 fechas_validas_cliques, mapeo_fechas, *placeholder = generacion_calendario()
 
 fechas_calendario_cliques = list(fechas_validas_cliques.keys())
 
-
+#dia_retiro = MAPEO(DIA_FECHA_RETIRO_CURSOS) 
+dia_retiro = 60
 
 arcos = cargar_arcos()
 cursos = cargar_cursos()
@@ -51,12 +60,15 @@ model.setParam("LogFile", os.path.join("resultados", "ModeloPruebas"))
 # Se podría maximizar un atractivo de pruebas. En el sentido de asignar ciertos días en que uno preferiría agendar pruebas
 # o cierto intervalo de días
 
-V = 1300
+V = VACANTES
 
 print('Capacidad', V)
 print(f"Se está ejecutando el experimento {NUM_EXPERIMENTO}")
-delta_min = 28
-delta_max = 63
+print("Modelo nuevo")
+delta_min = DELTAMIN
+delta_max = DELTAMAX
+
+dias_calendario = 117
 
 x = dict()
 z = dict()
@@ -75,7 +87,7 @@ for curso, interrogaciones in CONJUNTO_INTERROGACIONES.items():
         z[curso, prueba] = model.addVar(vtype=GRB.BINARY, name=name_binary)
         
         for fecha in fechas_calendario[curso]:
-            # x[curso, fecha, prueba] = model.addVar(mapeo_cursos[curso], fecha, prueba, vtype=GRB.BINARY)
+            # x[curso, 'A3_MS1 - Macrosección fecha, prueba] = model.addVar(mapeo_cursos[curso], fecha, prueba, vtype=GRB.BINARY)
             name = f"x[{curso},{fecha},{prueba}]"
             x[curso, fecha, prueba] = model.addVar(vtype=GRB.BINARY, name=name)
 
@@ -127,10 +139,34 @@ model.addConstrs(quicksum(x[curso, dia, prueba] for prueba in CONJUNTO_INTERROGA
 model.addConstrs(quicksum(y[clique, dia]
                  for clique in cliques) <= 1 for dia in fechas_calendario_cliques)
 
+#Separa los grupos en delta días
+for grupo in GRUPOS_M :
+    for d in range(dias_calendario):
+        intervalo = []
+        for i in range(DELTA_DIAS + 1) :
+            intervalo.append(d + i)
+        model.addConstr(quicksum(x[curso,dia,interrogacion] for curso in grupo for interrogacion in CONJUNTO_INTERROGACIONES[curso] for dia in intervalo if dia in fechas_calendario[curso]) <= 1)
+
+
+model.addConstrs(x[curso,dia,interrogacion] == 1 for (curso,dia,interrogacion) in PRUEBAS_PREASIGNADAS)
+
+#No permite cursos que sólo asignen una de sus pruebas
+model.addConstrs(quicksum(z[curso,interrogacion] for interrogacion in CONJUNTO_INTERROGACIONES[curso]) == len(CONJUNTO_INTERROGACIONES[curso])*z[curso, 1] for curso in cursos)
+
+#
+
+
 model.write("modelo.lp")
 
-model.setObjective(quicksum(z[curso, interrogacion] * vacantes[curso]
-                   for curso in cursos for interrogacion in CONJUNTO_INTERROGACIONES[curso]), GRB.MINIMIZE)
+#intento hacer multiobjetivo
+#Minimiza por defecto, por lo que no se indica GRB.MINIMIZE
+model.setObjectiveN(quicksum(z[curso, interrogacion] * vacantes[curso] for curso in cursos for interrogacion in CONJUNTO_INTERROGACIONES[curso]), 
+                    index = 0, priority = 2, name = "Obj1" )
+
+# model.setObjectiveN(quicksum(x[curso,dia,1]*vacantes[curso] for curso in cursos for dia in fechas_calendario[curso] if dia >= dia_retiro),
+#                     index = 1, priority = 1, name = "Obj2")
+model.setObjectiveN(quicksum(x[curso,dia,1]*dia for curso in cursos for dia in fechas_calendario[curso] if dia >= dia_retiro),
+                    index = 1, priority = 1, name = "Obj2")
 
 model.optimize()
 

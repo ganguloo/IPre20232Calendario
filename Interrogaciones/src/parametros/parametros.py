@@ -20,9 +20,8 @@ PATH_LISTADO_CURSOS = os.path.join("instancia_datos", "listado_cursos.xlsx")
 NUM_EXPERIMENTO = 2
 
 
-IDENTIFICADORES_FMAT = ["MAT1640", "MAT1630", "MAT1620", "MAT1610","MAT1207","EYP1113","MAT1203"]
-# ["EYP_MOD", "XN_MOD",
-#                        "WV_MOD", "YF_MOD", "GCH_MOD", "ED_MOD"]
+IDENTIFICADORES_FMAT = ["MAT1640", "MAT1630", "MAT1620", "MAT1610","MAT1207","EYP1113", "MAT1203"]
+# IDENTIFICADORES_FMAT = ["EYP_MOD", "XN_MOD", "WV_MOD", "YF_MOD", "GCH_MOD", "ED_MOD"]
 
 FECHAS_PROHIBIDAS_MARZO_GENERAL = ["06-Mar", "07-Mar", "08-Mar", "09-Mar", "10-Mar",
                                    "11-Mar", "12-Mar", "13-Mar", "14-Mar", "15-Mar",
@@ -109,6 +108,8 @@ CURSOS_3_IES = ["MAT1640_Coordinado - Macroseccion","MAT1630_Coordinado - Macros
                 #"ED_MOD_MS1 - Macroseccion 1", "WV_MOD_MS1 - Macroseccion 1"]
 
 DIA_FECHA_RETIRO_CURSOS = "" #Se debe llevar a la línea temporal numérica
+
+DIA_FECHA_RETIRO_CURSOS = ""
 
 #Algunos parametros del modelo
 DELTAMIN = 28
