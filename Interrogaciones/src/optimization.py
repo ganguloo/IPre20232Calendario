@@ -17,7 +17,7 @@ from parametros.cursos_ies import CONJUNTO_INTERROGACIONES
 from parametros.cursos_fechas import CONJUNTO_FECHAS
 
 from parametros.parametros import (NUM_EXPERIMENTO, DELTA_DIAS, GRUPOS, DELTAMIN,
-                                   DELTAMAX,VACANTES,PRUEBAS_PREASIGNADAS)
+                                   DELTAMAX,VACANTES,PRUEBAS_PREASIGNADAS, DIA_FECHA_RETIRO_CURSOS)
 
 #No se debe importar entremedio pero es la solucion rapida
 from generacion_parametros.grupos import completar_grupos_cursos_ies
@@ -31,7 +31,9 @@ fechas_validas_cliques, mapeo_fechas, *placeholder = generacion_calendario()
 
 fechas_calendario_cliques = list(fechas_validas_cliques.keys())
 
-
+#dia_retiro = MAPEO(DIA_FECHA_RETIRO_CURSOS) 
+dia_retiro = 63 #8 mayo?
+dia_i2 = 64
 
 arcos = cargar_arcos()
 cursos = cargar_cursos()
@@ -149,11 +151,25 @@ for grupo in GRUPOS_M :
 
 model.addConstrs(x[curso,dia,interrogacion] == 1 for (curso,dia,interrogacion) in PRUEBAS_PREASIGNADAS)
 
+#No permite cursos que sólo asignen una de sus pruebas
+model.addConstrs(quicksum(z[curso,interrogacion] for i in CONJUNTO_INTERROGACIONES[curso]) == len(CONJUNTO_INTERROGACIONES[curso])*z[curso, 1] for curso in cursos)
+
+#
+
 
 model.write("modelo.lp")
 
-model.setObjective(quicksum(z[curso, interrogacion] * vacantes[curso]
-                   for curso in cursos for interrogacion in CONJUNTO_INTERROGACIONES[curso]), GRB.MINIMIZE)
+#intento hacer multiobjetivo
+#Minimiza por defecto, por lo que no se indica GRB.MINIMIZE
+model.setObjectiveN(quicksum(z[curso, interrogacion] * vacantes[curso] for curso in cursos for interrogacion in CONJUNTO_INTERROGACIONES[curso]), 
+                    index = 0, priority = 10, name = "Obj1" )
+
+model.setObjectiveN(quicksum(quicksum(x[curso,dia,1]*vacantes[curso]*dia for dia in fechas_calendario[curso] if dia >= dia_retiro) +
+                     quicksum(x[curso,dia,2]*vacantes[curso]*dia for dia in fechas_calendario[curso] if dia <= dia_i2) for curso in cursos),
+                    index = 1, priority = 8, name = "Obj2")
+
+#model.setObjectiveN(quicksum(x[curso,dia,1]*vacantes[curso]*dia for curso in cursos for dia in fechas_calendario[curso] if dia >= dia_retiro),
+#                    index = 1, priority = 1, name = "Obj2")
 
 model.optimize()
 

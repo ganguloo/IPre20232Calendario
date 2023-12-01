@@ -26,7 +26,7 @@ from grafos.graph_addition import nuevos_arcos, juntar_grafos_prerrequisitos_y_m
 from grafos.prerrequisito import anadir_arcos_transitividad, grafo_prerrequisito
 from grafos.drawing import dibujar_grafo
 
-from parametros.parametros import (PATH_CURSOS_IES, PATH_LISTADO_NRC, PATH_MATERIAS,
+from parametros.parametros import (PATH_CURSOS_IES, PATH_LISTADO_NRC,PATH_LISTADO_NRC_ORIGINAL,PATH_CURSOS_IES_ORIGINAL, PATH_MATERIAS,
                                    IDENTIFICADORES_FMAT, FECHAS_PROHIBIDAS_FMAT, CURSOS_3_IES,
                                    CURSOS_COORDINADOS, SEC_COORDINADAS)
 
@@ -38,9 +38,7 @@ def main(crear_parametros_ies=True, crear_parametros_fechas=True):
     
     # -------- MACROSECCIONES CURSOS Y SECCIONES COORDINADAS ---------
     if crear_parametros_ies:
-        coordinados_a_macrosecciones(PATH_CURSOS_IES,PATH_LISTADO_NRC,CURSOS_COORDINADOS,SEC_COORDINADAS)
-    PATH_CURSOS_IES_1 = os.path.join("excel_horarios", "Prueba_ies.xlsx")
-    PATH_LISTADO_NRC_1 = os.path.join("excel_horarios", "Prueba_nrc.xlsx")
+        coordinados_a_macrosecciones(PATH_CURSOS_IES_ORIGINAL,PATH_LISTADO_NRC_ORIGINAL,CURSOS_COORDINADOS,SEC_COORDINADAS)
 
     # -------- GRAFO PRERREQUISITOS -------
     start_time = time.time() #Creo que se debe mover arriba
@@ -57,11 +55,11 @@ def main(crear_parametros_ies=True, crear_parametros_fechas=True):
     arcos_nuevos = nuevos_arcos(grafo_prerrequisitos)  # Funciona bien.
     # dibujar_grafo("grafo_prerrequisitos_ing", grafo_prerrequisitos)
     # -------- GRAFO MÓDULOS -------
-    cursos_ing_ies = cursos_con_pruebas(PATH_CURSOS_IES_1)
+    cursos_ing_ies = cursos_con_pruebas(PATH_CURSOS_IES)
     # cursos_con_horario = cursos_y_horario(path_excel_nrc)
     # cursos_con_horario = cursos_y_horario_polars(path_excel_nrc, cursos_ing_ies)
     cursos_con_horario = cursos_mod_dipre(
-        PATH_LISTADO_NRC_1, cursos_ing_ies).to_pandas()
+        PATH_LISTADO_NRC, cursos_ing_ies).to_pandas()
     # cursos_con_horario.to_excel("ramos_ing_ies.xlsx", index=False)
     # sys.exit()
     # Ver lo de las macrosecciones. Por ejemplo, opti no aparece, pues las cátedras no están agrupadas como macrosección
@@ -75,7 +73,7 @@ def main(crear_parametros_ies=True, crear_parametros_fechas=True):
                                                chain(*list(macrosecciones.values())))
 
     # print(cursos_pertenecientes_a_macroseccion)
-    grafo_modulos = grafo_mismo_modulo(PATH_LISTADO_NRC_1, cursos_ing_ies)
+    grafo_modulos = grafo_mismo_modulo(PATH_LISTADO_NRC, cursos_ing_ies)
     # dibujar_grafo("grafo_antes_macroseccion", grafo_modulos)
     
     grafo_modulos = reemplazar_siglas_con_macrosecciones(grafo_modulos,
@@ -153,6 +151,7 @@ def main(crear_parametros_ies=True, crear_parametros_fechas=True):
             for curso in lista_nodos:
                 curso_fmat_bool = any(i in curso
                                       for i in IDENTIFICADORES_FMAT)
+                
                 if curso_fmat_bool:
                     fechas_validas, *others = generacion_calendario(dias_prohibidos=FECHAS_PROHIBIDAS_FMAT)
 

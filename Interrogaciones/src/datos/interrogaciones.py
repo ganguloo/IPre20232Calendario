@@ -1,11 +1,11 @@
-
+from parametros.grupos_modelo import GRUPOS_M
 def organizacion_datos_interrogaciones(mapeo_fechas, path):
     with open(path, 'r', encoding="utf-8") as file:
         archivo = [i.strip() for i in file.readlines()]
         fechas_actualizado = []
 
         for i in archivo:
-            if "x" not in i:
+            if "y" in i:
                 continue
             a = i.replace("[", ",").replace("]", ",")
             a = a.split(",")
@@ -23,6 +23,40 @@ def interrogaciones_mes(mes, fechas_interrogaciones, fechas):
     interrogaciones_del_mes = []
     for curso in fechas_interrogaciones:
         if mes in curso[1]:
+            date = fechas[curso[1]].date()
+            texto = f"I{curso[2]} : {curso[0]}"
+            interrogaciones_del_mes.append((date, texto))
+
+    return interrogaciones_del_mes
+
+def interrogaciones_mes_i1s(mes, fechas_interrogaciones, fechas):
+    interrogaciones_del_mes = []
+    for curso in fechas_interrogaciones:
+        if mes in curso[1] and int(curso[2])==1:
+            date = fechas[curso[1]].date()
+            texto = f"I{curso[2]} : {curso[0]}"
+            interrogaciones_del_mes.append((date, texto))
+
+    return interrogaciones_del_mes
+
+def interrogaciones_mes_i2s(mes, fechas_interrogaciones, fechas):
+    interrogaciones_del_mes = []
+    for curso in fechas_interrogaciones:
+        if mes in curso[1] and int(curso[2])==2:
+            date = fechas[curso[1]].date()
+            texto = f"I{curso[2]} : {curso[0]}"
+            interrogaciones_del_mes.append((date, texto))
+
+    return interrogaciones_del_mes
+
+def interrogaciones_mes_grupos(mes, fechas_interrogaciones, fechas):
+    interrogaciones_del_mes = []
+    grupos = []
+    for i in GRUPOS_M :
+        for j in i : 
+            grupos.append(j)
+    for curso in fechas_interrogaciones:
+        if mes in curso[1] and curso[0] in grupos:
             date = fechas[curso[1]].date()
             texto = f"I{curso[2]} : {curso[0]}"
             interrogaciones_del_mes.append((date, texto))

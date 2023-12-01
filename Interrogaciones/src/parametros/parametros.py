@@ -1,13 +1,18 @@
 import os
 
 PATH_LISTADO_NRC = os.path.join("excel_horarios",
+                                 "Prueba_nrc.xlsx")
+PATH_LISTADO_NRC_ORIGINAL = os.path.join("excel_horarios",
                                  "Listado_NRC_2023_Enero.xlsx")
 PATH_VACANTES = os.path.join("instancia_datos", "vacantes.xlsx")
 PATH_CONEXIONES = os.path.join("instancia_datos", "conexiones.xlsx")
-# PATH_CURSOS_IES = os.path.join(
-#         "excel_horarios", "004 - Listado_NRC_Programados.xlsx")
 PATH_CURSOS_IES = os.path.join(
-    "excel_horarios", "004-filtrado.xlsx")
+        "excel_horarios", "Prueba_ies.xlsx")
+PATH_CURSOS_IES_ORIGINAL = os.path.join(
+        "excel_horarios", "004 - Listado_NRC_Programados.xlsx")
+# PATH_CURSOS_IES = os.path.join(
+#     "excel_horarios", "004-filtrado.xlsx")
+
 
 PATH_MATERIAS = os.path.join("excel_horarios", "Listado_materias.xlsx")
 PATH_LISTADO_CURSOS = os.path.join("instancia_datos", "listado_cursos.xlsx")
@@ -102,6 +107,7 @@ CURSOS_3_IES = ["MAT1640_Coordinado - Macroseccion","MAT1630_Coordinado - Macros
 #["EYP_MOD_MS1 - Macroseccion 1", "XN_MOD_MS1 - Macroseccion 1", "YF_MOD_MS1 - Macroseccion 1", "GCH_MOD_MS1 - Macroseccion 1", 
                 #"ED_MOD_MS1 - Macroseccion 1", "WV_MOD_MS1 - Macroseccion 1"]
 
+DIA_FECHA_RETIRO_CURSOS = "" #Se debe llevar a la línea temporal numérica
 
 DIA_FECHA_RETIRO_CURSOS = ""
 
