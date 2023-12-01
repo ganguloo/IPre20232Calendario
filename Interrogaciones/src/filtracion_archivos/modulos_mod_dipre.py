@@ -10,7 +10,7 @@ def  cursos_mod_dipre(path, cursos_ing, columnas: list = ["Nombre Curso", "Horar
                                                          "Vacantes Ofrecidas"],
                      reuniones=["CLAS - Cátedra",
                                 "LAB - Laboratorio", "TAL - Taller"],
-                     incluir_fmat=True):
+                     incluir_fmat=True, incluir_fis_y_qim = True):
     """
     TODO
     Documentar
@@ -52,12 +52,19 @@ def  cursos_mod_dipre(path, cursos_ing, columnas: list = ["Nombre Curso", "Horar
                  .drop("Horario")
                  .filter(pl.col("union_horarios") != "CLAS - ")
                  .filter(pl.col("Sigla").is_in(cursos_ing)))
-
+    
     # Añadimos los cursos de FMAT
     if incluir_fmat:
         cursos_fmat_dataframe = cursos_fmat(path)
         cursos_fmat_dataframe = cursos_fmat_dataframe[dataframe.columns]
         dataframe = dataframe.extend(cursos_fmat_dataframe)
+    
+    # Añadimos otras facultades No me resulto
+    if incluir_fis_y_qim:
+        cursos_fisqim_dataframe = cursos_fis_y_qim(path)
+        cursos_fisqim_dataframe = cursos_fisqim_dataframe[dataframe.columns]
+        dataframe = dataframe.extend(cursos_fisqim_dataframe)
+
 
     return dataframe
 
@@ -84,7 +91,30 @@ def cursos_fmat(path, columnas: list = ["Nombre Curso", "Horario",
               #.filter(pl.col("Socio Integración") == "04 - Ingeniería") #Se sacó en la última versión
               .filter(pl.col("Sigla").is_in(siglas_fmat))
               .filter(pl.col("Escuela").is_in(["06 - Matemáticas"])))
+    return cursos
 
+def cursos_fis_y_qim(path, columnas: list = ["Nombre Curso", "Horario",
+                                        "Sigla_Seccion", "Lista Cruzada",
+                                        "Macrosección", "Escuela", "Sigla",
+                                        "Socio Integración", "Tipo Reunión",
+                                        "Vacantes Ofrecidas"],
+                reuniones=["CLAS - Cátedra"],
+                siglas_fis_qim=["FIS1514", "FIS1523", "FIS1533",
+                             "QIM100E"]):
+    cursos = pl.read_excel(path, read_csv_options={
+                           "infer_schema_length": 3000})
+    new_columns = {col: col.strip() for col in cursos.columns}
+    # Se renombra una columna -> Se crea una nueva -> Se seleccionan ciertas columnas -> Se hace un filtrado
+    cursos = (cursos.rename(new_columns)
+              .with_columns((pl.col("Materia") + pl.col(
+                  "Número Curso") + "-" + pl.col("Sección").cast(pl.Utf8)).alias("Sigla_Seccion"))
+              .with_columns((pl.col("Materia") + pl.col("Número Curso")).alias("Sigla"))
+              .select(columnas)
+              .with_columns((pl.col("Horario")).alias("union_horarios"))
+              .filter(pl.col("Tipo Reunión").is_in(reuniones))
+              #.filter(pl.col("Socio Integración") == "04 - Ingeniería") #Se sacó en la última versión
+              .filter(pl.col("Sigla").is_in(siglas_fis_qim))
+              .filter(pl.col("Escuela").is_in(["10 - Química", "03 - Física"])))
     return cursos
 
     """
