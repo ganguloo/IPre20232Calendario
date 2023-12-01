@@ -33,6 +33,7 @@ fechas_calendario_cliques = list(fechas_validas_cliques.keys())
 
 #dia_retiro = MAPEO(DIA_FECHA_RETIRO_CURSOS) 
 dia_retiro = 63 #8 mayo?
+dia_i2 = 64
 
 arcos = cargar_arcos()
 cursos = cargar_cursos()
@@ -161,10 +162,14 @@ model.write("modelo.lp")
 #intento hacer multiobjetivo
 #Minimiza por defecto, por lo que no se indica GRB.MINIMIZE
 model.setObjectiveN(quicksum(z[curso, interrogacion] * vacantes[curso] for curso in cursos for interrogacion in CONJUNTO_INTERROGACIONES[curso]), 
-                    index = 0, priority = 2, name = "Obj1" )
+                    index = 0, priority = 10, name = "Obj1" )
 
-model.setObjectiveN(quicksum(x[curso,dia,1]*vacantes[curso]*dia for curso in cursos for dia in fechas_calendario[curso] if dia >= dia_retiro),
-                    index = 1, priority = 1, name = "Obj2")
+model.setObjectiveN(quicksum(quicksum(x[curso,dia,1]*vacantes[curso]*dia for dia in fechas_calendario[curso] if dia >= dia_retiro) +
+                     quicksum(x[curso,dia,2]*vacantes[curso]*dia for dia in fechas_calendario[curso] if dia <= dia_i2) for curso in cursos),
+                    index = 1, priority = 8, name = "Obj2")
+
+#model.setObjectiveN(quicksum(x[curso,dia,1]*vacantes[curso]*dia for curso in cursos for dia in fechas_calendario[curso] if dia >= dia_retiro),
+#                    index = 1, priority = 1, name = "Obj2")
 
 model.optimize()
 

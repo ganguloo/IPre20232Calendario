@@ -39,6 +39,16 @@ def interrogaciones_mes_i1s(mes, fechas_interrogaciones, fechas):
 
     return interrogaciones_del_mes
 
+def interrogaciones_mes_i2s(mes, fechas_interrogaciones, fechas):
+    interrogaciones_del_mes = []
+    for curso in fechas_interrogaciones:
+        if mes in curso[1] and int(curso[2])==2:
+            date = fechas[curso[1]].date()
+            texto = f"I{curso[2]} : {curso[0]}"
+            interrogaciones_del_mes.append((date, texto))
+
+    return interrogaciones_del_mes
+
 def interrogaciones_mes_grupos(mes, fechas_interrogaciones, fechas):
     interrogaciones_del_mes = []
     grupos = []
