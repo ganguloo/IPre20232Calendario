@@ -81,7 +81,7 @@ def cursos_fmat(path, columnas: list = ["Nombre Curso", "Horario",
               .select(columnas)
               .with_columns((pl.col("Horario")).alias("union_horarios"))
               .filter(pl.col("Tipo Reunión").is_in(reuniones))
-              .filter(pl.col("Socio Integración") == "04 - Ingeniería")
+            #   .filter(pl.col("Socio Integración") == "04 - Ingeniería")
               .filter(pl.col("Sigla").is_in(siglas_fmat))
               .filter(pl.col("Escuela").is_in(["06 - Matemáticas"])))
 
