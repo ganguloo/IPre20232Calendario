@@ -120,8 +120,7 @@ model.addConstrs(quicksum(x[curso, dia, interrogacion] * vacantes[curso]
 # Restricción del intervalo posible de días para la I2 dada la I1
 for curso in cursos:
     for dia in fechas_calendario[curso]:
-        # Recorremos hasta el antepenúltimo
-        #DICE ANTEPENULTIMO PERO NO SERIA PENULTIMO?
+        # Recorremos hasta el penúltimo
         for interrogacion in CONJUNTO_INTERROGACIONES[curso][:-1]:
             # inferior deberia ser siempre menor a superior, de ahí revisar
             inferior = dia + delta_min
@@ -129,7 +128,6 @@ for curso in cursos:
             # if inferior < superior:
 #
             # En este rango, puede ser que se generen fechas que no estaban inicialmente consideradas
-            #Y ESTO ES BUENO O MALO?
             rango_dias_validos = [x for x in range(
                 inferior, superior + 1) if x in fechas_calendario[curso]]
             # if inferior >= fechas_calendario[:-1]:
@@ -146,7 +144,7 @@ model.addConstrs(quicksum(x[curso, dia, prueba] for prueba in CONJUNTO_INTERROGA
 model.addConstrs(quicksum(y[clique, dia]
                  for clique in cliques) <= 1 for dia in fechas_calendario_cliques)
 
-#Separa los grupos en delta días
+#Separa los cursos de grupos en delta días
 for grupo in GRUPOS_M :
     for d in range(dias_calendario):
         intervalo = []

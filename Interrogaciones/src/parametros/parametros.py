@@ -109,8 +109,6 @@ CURSOS_3_IES = ["MAT1640_Coordinado - Macroseccion","MAT1630_Coordinado - Macros
 
 DIA_FECHA_RETIRO_CURSOS = "" #Se debe llevar a la línea temporal numérica
 
-DIA_FECHA_RETIRO_CURSOS = ""
-
 SEMANA_LICENCIATURA = 11
 
 #Algunos parametros del modelo

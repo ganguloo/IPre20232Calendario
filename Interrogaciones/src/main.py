@@ -43,6 +43,7 @@ def main(crear_parametros_ies=True, crear_parametros_fechas=True):
     # -------- GRAFO PRERREQUISITOS -------
     start_time = time.time() #Creo que se debe mover arriba
     dataframe_ing = cursos_ingenieria_polars(PATH_MATERIAS)  # Funciona bien
+    #************Agregar cursos fmat, fis, qim a dataframe_ing
 
     cursos = diccionario_cursos_y_prerrequisitos(dataframe_ing)
     grafo_prerrequisitos = grafo_prerrequisito(cursos)

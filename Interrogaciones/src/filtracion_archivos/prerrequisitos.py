@@ -55,6 +55,8 @@ def diccionario_cursos_y_prerrequisitos(dataframe_ingenieria: pd.core.frame.Data
         lista = prerrequisitos.strip().split("o")
         # Quitamos los whitespaces de todos los strings
         lista = list(map(str.strip, lista))
+        '''for n,i in enumerate(lista) :
+            lista[n].append("curso que se encuentre en equivalencia")'''
         # Con esto separamos en otras listas los prerrequisitos que tienen un "y"
         nueva_lista = [i.split("y") for i in lista]
         # Con esto de aquí removemos nuevamente los whitespaces de los strings
