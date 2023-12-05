@@ -40,10 +40,9 @@ def crear_grafo(path_edges, path_nodos):
     nodelist_pd.drop(nodelist_pd[nodelist_pd['Available'] == 'F'].index, inplace = True)  #  Elimina salas no disponibles
     nodelist_pd.to_csv(path_excel_creado)
 
-    # edge_colors = [e[2]['w']['color'] for e in list(g.edges(data=True))]
-    # print(list(g.edges(data=True))[0:40])
-    # print(list(g.nodes(data=True)))
+    # Las siguientes 4 lineas muestran el grafo de salas en pantalla
 
+    # edge_colors = [e[2]['w']['color'] for e in list(g.edges(data=True))]
     # plt.figure(figsize=(8, 6))
     # nx.draw(g, edge_color=edge_colors, node_size=10, node_color='black', with_labels=True, font_size=5)
     # plt.show()
@@ -51,4 +50,3 @@ def crear_grafo(path_edges, path_nodos):
 
 
 crear_grafo(path_edges, path_nodos)
-

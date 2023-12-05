@@ -11,7 +11,7 @@ path_edges = os.path.join('Datos', "datos grafo salas.xlsx")
 path_prioridades = os.path.join('Salas', 'datos', "salas.csv")
 path_output = os.path.join('Interrogaciones', 'src', "output.csv")
 G = crear_grafo(path_edges, path_nodos)
-
+# Se asignan las prioridades a cada sala
 prioridades = pl.read_csv(path_prioridades)
 sala_prioridades = prioridades.to_pandas()["Location Name"].values
 num_prioridades = prioridades.to_pandas()["Priority"].values
@@ -30,7 +30,6 @@ for linea in info:
         setinfo.append(linea[3])
     secciones[linea[0]] = linea[1]
 escribir = []
-salas = []
 escribir.append('Curso;Secciones;Fecha;Sala;N°;Cantidad Salas')
 
 for dia in setinfo:
