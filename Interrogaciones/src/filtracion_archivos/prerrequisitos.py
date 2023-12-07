@@ -34,7 +34,7 @@ def cursos_ingenieria(path_excel_cursos: str) -> pd.core.frame.DataFrame:
     return dataframe_ing
 
 
-def diccionario_cursos_y_prerrequisitos(dataframe_ingenieria: pd.core.frame.DataFrame) -> dict:
+def diccionario_cursos_y_prerrequisitos(dataframe_ingenieria: pd.core.frame.DataFrame, materias) -> dict:
     """Retorna un diccionario de los cursos junto con sus requisitos, donde cada key es el nombre 
     del curso y el value asociado es una lista con los prerrequisitos.
 
@@ -50,13 +50,11 @@ def diccionario_cursos_y_prerrequisitos(dataframe_ingenieria: pd.core.frame.Data
 
     lista_cursos = dataframe_ingenieria.values.tolist()
     dict_cursos_y_prerrequisitos = dict()
-    for curso, prerrequisitos, sigla in lista_cursos:
+    for n, curso, prerrequisitos, sigla in enumerate(lista_cursos):
         # Lo que se hace aquí es eliminar las "o" de los prerrequisitos
         lista = prerrequisitos.strip().split("o")
         # Quitamos los whitespaces de todos los strings
         lista = list(map(str.strip, lista))
-        '''for n,i in enumerate(lista) :
-            lista[n].append("curso que se encuentre en equivalencia")'''
         # Con esto separamos en otras listas los prerrequisitos que tienen un "y"
         nueva_lista = [i.split("y") for i in lista]
         # Con esto de aquí removemos nuevamente los whitespaces de los strings
@@ -64,6 +62,25 @@ def diccionario_cursos_y_prerrequisitos(dataframe_ingenieria: pd.core.frame.Data
             for indice, value in enumerate(sublista):
                 sublista[indice] = value.strip()
 
+        '''# Creamos lista de equivalencias ESTO ESTA MAL PORQUE SE DEBE HACER LA LISTA PARA CADA CURSO DE LA LISTA DE PRERREQUISITOS
+        excel = pd.read_excel(materias)
+        excel = excel.values.tolist()
+        equivalencias_curso = excel[n][13]
+        equivalencias_curso = equivalencias_curso.strip().split("o")
+        m = 0
+        while m < len(equivalencias_curso) :
+            if "y" in equivalencias_curso[m] :
+                equivalencias_curso.pop(m)
+            else:
+                m += 1
+
+        # Agregamos las equivalencias
+        for m,lista_chica in enumerate(nueva_lista) : #esta lista contiene conjunto de cursos requisito
+            for o,chequeo  in enumerate(lista_chica) :
+                if 
+        '''
+                
+        
         if len(nueva_lista) == 1:
             # Si es que solo hay un prerrequisito
             result = sum(nueva_lista, [])

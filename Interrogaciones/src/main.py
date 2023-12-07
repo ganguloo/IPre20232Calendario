@@ -45,7 +45,8 @@ def main(crear_parametros_ies=True, crear_parametros_fechas=True):
     dataframe_ing = cursos_ingenieria_polars(PATH_MATERIAS)  # Funciona bien
     #************Agregar cursos fmat, fis, qim a dataframe_ing
 
-    cursos = diccionario_cursos_y_prerrequisitos(dataframe_ing)
+    cursos = diccionario_cursos_y_prerrequisitos(dataframe_ing, PATH_MATERIAS)
+    print(cursos)
     grafo_prerrequisitos = grafo_prerrequisito(cursos)
     # Se hace para que el arco vaya del prerrequisito al ramo
     # grafo_prerrequisitos = grafo_prerrequisitos.reverse() # Esto ya estaba en la función de grafo_prerrequito

@@ -5,9 +5,9 @@ from parametros.cursos_ies import CONJUNTO_INTERROGACIONES
 from filtracion_archivos.modulos_mod_dipre import cursos_mod_dipre
 from filtracion_archivos.cursos_con_ies import cursos_con_pruebas
 
-h = "hola"
-print(h[1])
-
+lista = ['a', 'b','c','d','e','f']
+lista.pop(1)
+print(lista)
 
 #cursos_ing_ies = cursos_con_pruebas(PATH_CURSOS_IES)
 #print(cursos_mod_dipre(PATH_LISTADO_NRC, cursos_ing_ies ))
