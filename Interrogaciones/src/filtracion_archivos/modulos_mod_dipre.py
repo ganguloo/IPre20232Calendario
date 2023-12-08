@@ -10,7 +10,8 @@ def  cursos_mod_dipre(path, cursos_ing, columnas: list = ["Nombre Curso", "Horar
                                                          "Vacantes Ofrecidas"],
                      reuniones=["CLAS - Cátedra",
                                 "LAB - Laboratorio", "TAL - Taller"],
-                     incluir_fmat=True, incluir_fis_y_qim = True):
+                     incluir_fmat = True, incluir_fis_y_qim = True,
+                     identificadores_fmat = [], identificadores_fis_y_qim = []):
     """
     TODO
     Documentar
@@ -55,13 +56,13 @@ def  cursos_mod_dipre(path, cursos_ing, columnas: list = ["Nombre Curso", "Horar
     
     # Añadimos los cursos de FMAT
     if incluir_fmat:
-        cursos_fmat_dataframe = cursos_fmat(path)
+        cursos_fmat_dataframe = cursos_fmat(path, siglas_fmat=identificadores_fmat)
         cursos_fmat_dataframe = cursos_fmat_dataframe[dataframe.columns]
         dataframe = dataframe.extend(cursos_fmat_dataframe)
     
     # Añadimos otras facultades No me resulto
     if incluir_fis_y_qim:
-        cursos_fisqim_dataframe = cursos_fis_y_qim(path)
+        cursos_fisqim_dataframe = cursos_fis_y_qim(path, siglas_fis_qim=identificadores_fis_y_qim)
         cursos_fisqim_dataframe = cursos_fisqim_dataframe[dataframe.columns]
         dataframe = dataframe.extend(cursos_fisqim_dataframe)
 
@@ -74,9 +75,7 @@ def cursos_fmat(path, columnas: list = ["Nombre Curso", "Horario",
                                         "Macrosección", "Escuela", "Sigla",
                                         "Socio Integración", "Tipo Reunión",
                                         "Vacantes Ofrecidas"],
-                reuniones=["CLAS - Cátedra"],
-                siglas_fmat=["MAT1630", "EYP1113", "MAT1610",
-                             "MAT1620", "MAT1640", "MAT1203"]):
+                reuniones=["CLAS - Cátedra"], siglas_fmat = []):
     cursos = pl.read_excel(path, read_csv_options={
                            "infer_schema_length": 3000})
     new_columns = {col: col.strip() for col in cursos.columns}
@@ -99,8 +98,7 @@ def cursos_fis_y_qim(path, columnas: list = ["Nombre Curso", "Horario",
                                         "Socio Integración", "Tipo Reunión",
                                         "Vacantes Ofrecidas"],
                 reuniones=["CLAS - Cátedra"],
-                siglas_fis_qim=["FIS1514", "FIS1523", "FIS1533",
-                             "QIM100E"]):
+                siglas_fis_qim=[]):
     cursos = pl.read_excel(path, read_csv_options={
                            "infer_schema_length": 3000})
     new_columns = {col: col.strip() for col in cursos.columns}

@@ -6,8 +6,11 @@ from filtracion_archivos.modulos_mod_dipre import cursos_mod_dipre
 from filtracion_archivos.cursos_con_ies import cursos_con_pruebas
 
 lista = ['a', 'b','c','d','e','f']
-lista.pop(1)
+lista2 = [1,2,3,4,5,6]
+for i in lista2:
+    lista.append(i)
 print(lista)
+
 
 #cursos_ing_ies = cursos_con_pruebas(PATH_CURSOS_IES)
 #print(cursos_mod_dipre(PATH_LISTADO_NRC, cursos_ing_ies ))

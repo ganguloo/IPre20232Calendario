@@ -50,7 +50,7 @@ def diccionario_cursos_y_prerrequisitos(dataframe_ingenieria: pd.core.frame.Data
 
     lista_cursos = dataframe_ingenieria.values.tolist()
     dict_cursos_y_prerrequisitos = dict()
-    for n, curso, prerrequisitos, sigla in enumerate(lista_cursos):
+    for curso, prerrequisitos, sigla in lista_cursos: 
         # Lo que se hace aquí es eliminar las "o" de los prerrequisitos
         lista = prerrequisitos.strip().split("o")
         # Quitamos los whitespaces de todos los strings
@@ -65,7 +65,7 @@ def diccionario_cursos_y_prerrequisitos(dataframe_ingenieria: pd.core.frame.Data
         '''# Creamos lista de equivalencias ESTO ESTA MAL PORQUE SE DEBE HACER LA LISTA PARA CADA CURSO DE LA LISTA DE PRERREQUISITOS
         excel = pd.read_excel(materias)
         excel = excel.values.tolist()
-        equivalencias_curso = excel[n][13]
+        equivalencias_curso = excel[n][13] #este n lo iba a sacar de cada iteracion de lista cursos, pero como indico mas arriba, no sirve
         equivalencias_curso = equivalencias_curso.strip().split("o")
         m = 0
         while m < len(equivalencias_curso) :
