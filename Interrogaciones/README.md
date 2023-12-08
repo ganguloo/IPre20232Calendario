@@ -63,6 +63,7 @@ Lo que uno haría normalmente es ejecutar el código en el siguiente orden
 - `optimization.py`
 - `out_calendarios.py`
 - `test.py` (Opcional)
+- `out_resultados_excel.py` (Genera archivo `.csv` para utilizar como input en el programa de salas)
 
 ## Ejemplos
 
