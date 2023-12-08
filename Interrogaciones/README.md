@@ -61,7 +61,7 @@ Lo que uno haría normalmente es ejecutar el código en el siguiente orden
 - Revisar el parámetro `NUM_EXPERIMENTO`
 - `main.py`
 - `optimization.py`
-- `prueba.py`
+- `out_calendarios.py`
 - `test.py` (Opcional)
 
 ## Ejemplos

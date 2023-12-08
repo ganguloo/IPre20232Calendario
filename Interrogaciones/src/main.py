@@ -27,7 +27,7 @@ from grafos.prerrequisito import anadir_arcos_transitividad, grafo_prerrequisito
 from grafos.drawing import dibujar_grafo
 
 from parametros.parametros import (PATH_CURSOS_IES, PATH_LISTADO_NRC,PATH_LISTADO_NRC_ORIGINAL,PATH_CURSOS_IES_ORIGINAL, PATH_MATERIAS,
-                                   IDENTIFICADORES_FMAT, FECHAS_PROHIBIDAS_FMAT, CURSOS_3_IES,
+                                   IDENTIFICADORES_FMAT, CURSOS_3_IES,
                                    CURSOS_COORDINADOS, SEC_COORDINADAS)
 
 from datos.generacion_calendario import generacion_calendario
@@ -153,7 +153,7 @@ def main(crear_parametros_ies=True, crear_parametros_fechas=True):
                                       for i in IDENTIFICADORES_FMAT)
                 
                 if curso_fmat_bool:
-                    fechas_validas, *others = generacion_calendario(dias_prohibidos=FECHAS_PROHIBIDAS_FMAT)
+                    fechas_validas, *others = generacion_calendario(fmat=True)
 
                 if "Macrosección" in curso:
                     curso = curso.replace("Macrosección", "Macroseccion")
