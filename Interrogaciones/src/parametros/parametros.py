@@ -28,6 +28,9 @@ FECHAS_PROHIBIDAS = fechas_prohibidas(PATH_PARAMETROS, "Fechas")
 # Obtenemos los cursos coordinados del excel
 CURSOS_COORDINADOS = excel_cursos_coordinados(PATH_PARAMETROS, "Cursos Coordinados")
 
+# Obtenemos las pruebas preasignadas (solo para cursos coordinados)
+#Formato: si cursos todos coordinados: (curso (str), fecha (int), nr de prueba(int)) ¡La fecha debe ser en línea de tiempo real!
+PRUEBAS_PREASIGNADAS = excel_cursos_coordinados(PATH_PARAMETROS, "Interrogaciones Fijas")
 
 
 IDENTIFICADORES_FMAT = ["MAT1640", "MAT1630", "MAT1620", "MAT1610","MAT1207","EYP1113", "MAT1203"]
@@ -41,9 +44,6 @@ GRUPOS = [["MAT1620","FIS1514","IIC1103"],["MAT1620","ICE1514","IIC1103"],["MAT1
           ["IIC1103","IIC1001","MAT1107","MAT1207"]]
 
 DELTA_DIAS = 2
-
-#Formato: si cursos todos coordinados: (curso (str), fecha (int), nr de prueba(int)) ¡La fecha debe ser en línea de tiempo real!
-PRUEBAS_PREASIGNADAS = []
 
 SEC_COORDINADAS = [["ICS3313","2","3"],["ICS3413","2","3"],["ICS2523","1","2"]]
 

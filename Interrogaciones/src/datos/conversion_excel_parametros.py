@@ -1,4 +1,5 @@
 import pandas as pd
+from datetime import datetime
 
 def fechas_prohibidas(excel_file, sheet):
     # Read the Excel file into a pandas DataFrame
@@ -23,3 +24,23 @@ def excel_cursos_coordinados(excel_file, sheet):
 
     # Return the list of data from the first column
     return lista_cursos
+
+
+def fijar_interrogaciones(excel_file, sheet):
+    # Read the specified sheet of the Excel file into a pandas DataFrame
+    df = pd.read_excel(excel_file, sheet_name=sheet)
+
+    # Extract the data from the first three columns and store them in a list of lists
+    first_three_columns_data = df.iloc[:, :3].values.tolist()
+
+    fecha_inicio_clases = datetime(2023, 3, 6)
+
+    cursos_coordinados = excel_cursos_coordinados(excel_file, "Cursos Coordinados")
+
+    for prueba in first_three_columns_data:
+        prueba[2] = (prueba[2] - fecha_inicio_clases).days
+        if prueba[0] in cursos_coordinados:
+            prueba[0] += "_Coordinado - Macroseccion"
+
+    # Return the list of lists
+    return first_three_columns_data
