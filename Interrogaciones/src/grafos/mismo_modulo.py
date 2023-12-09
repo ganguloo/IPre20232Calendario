@@ -87,6 +87,7 @@ def reemplazar_siglas_con_macrosecciones(grafo_tope_horario: nx.classes.graph.Gr
                 vecinos = grafo_tope_horario.neighbors(sigla_seccion)
                 lista_vecinos.extend(vecinos)
                 # lista_vecinos += vecinos
+            print(f"{macroseccion} con lista de vecinos: {lista_vecinos}")
 
         if len(lista_vecinos) != 0:
             if macroseccion not in macrosecciones_tope_horario.keys():
@@ -94,8 +95,8 @@ def reemplazar_siglas_con_macrosecciones(grafo_tope_horario: nx.classes.graph.Gr
             else:
                 macrosecciones_tope_horario[macroseccion] = macrosecciones_tope_horario[macroseccion].extend(
                     lista_vecinos)
-        nombre = "reemplazar_siglas_con_macrosecciones"        
-        logging.debug(f"[Función: {nombre}]: {macroseccion} tiene de vecinos a {macrosecciones_tope_horario[macroseccion]}")
+            nombre = "reemplazar_siglas_con_macrosecciones"        
+            logging.debug(f"[Función: {nombre}]: {macroseccion} tiene de vecinos a {macrosecciones_tope_horario[macroseccion]}")
 
     lista_nodos = list(grafo_tope_horario.nodes)
     for nodo in cursos_a_eliminar:
