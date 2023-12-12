@@ -5,7 +5,7 @@ def organizacion_datos_interrogaciones(mapeo_fechas, path):
         fechas_actualizado = []
 
         for i in archivo:
-            if "y" in i:
+            if "y" in i[0] or "a" in i[0]:
                 continue
             a = i.replace("[", ",").replace("]", ",")
             a = a.split(",")
