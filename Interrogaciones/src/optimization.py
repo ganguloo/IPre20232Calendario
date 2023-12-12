@@ -17,7 +17,7 @@ from parametros.cursos_ies import CONJUNTO_INTERROGACIONES
 from parametros.cursos_fechas import CONJUNTO_FECHAS
 
 from parametros.parametros import (NUM_EXPERIMENTO, DELTA_DIAS, GRUPOS, DELTAMIN,
-                                   DELTAMAX,VACANTES,PRUEBAS_PREASIGNADAS, DIA_FECHA_RETIRO_CURSOS)
+                                   DELTAMAX,VACANTES,PRUEBAS_PREASIGNADAS, DIA_FECHA_RETIRO_CURSOS,SEMANA_LICENCIATURA)
 
 #No se debe importar entremedio pero es la solucion rapida
 from generacion_parametros.grupos import completar_grupos_cursos_ies
@@ -33,7 +33,9 @@ fechas_calendario_cliques = list(fechas_validas_cliques.keys())
 
 #dia_retiro = MAPEO(DIA_FECHA_RETIRO_CURSOS) 
 dia_retiro = 63 #8 mayo?
-dia_i2 = 64
+dia_i2 = 70
+
+diasem = (SEMANA_LICENCIATURA-1)*7
 
 arcos = cargar_arcos()
 cursos = cargar_cursos()
@@ -71,6 +73,8 @@ delta_max = DELTAMAX
 
 dias_calendario = 117
 
+J = range(0,4)
+
 x = dict()
 z = dict()
 mapeo_cursos = dict()
@@ -100,6 +104,8 @@ y = model.addVars(cliques,
                   vtype=GRB.BINARY,
                   name="y")
 
+a = model.addVars(J, vtype=GRB.BINARY, name="a")
+
 model.update()
 
 # Cada prueba se asigna una vez
@@ -114,8 +120,7 @@ model.addConstrs(quicksum(x[curso, dia, interrogacion] * vacantes[curso]
 # Restricción del intervalo posible de días para la I2 dada la I1
 for curso in cursos:
     for dia in fechas_calendario[curso]:
-        # Recorremos hasta el antepenúltimo
-        #DICE ANTEPENULTIMO PERO NO SERIA PENULTIMO?
+        # Recorremos hasta el penúltimo
         for interrogacion in CONJUNTO_INTERROGACIONES[curso][:-1]:
             # inferior deberia ser siempre menor a superior, de ahí revisar
             inferior = dia + delta_min
@@ -123,7 +128,6 @@ for curso in cursos:
             # if inferior < superior:
 #
             # En este rango, puede ser que se generen fechas que no estaban inicialmente consideradas
-            #Y ESTO ES BUENO O MALO?
             rango_dias_validos = [x for x in range(
                 inferior, superior + 1) if x in fechas_calendario[curso]]
             # if inferior >= fechas_calendario[:-1]:
@@ -140,7 +144,7 @@ model.addConstrs(quicksum(x[curso, dia, prueba] for prueba in CONJUNTO_INTERROGA
 model.addConstrs(quicksum(y[clique, dia]
                  for clique in cliques) <= 1 for dia in fechas_calendario_cliques)
 
-#Separa los grupos en delta días
+#Separa los cursos de grupos en delta días
 for grupo in GRUPOS_M :
     for d in range(dias_calendario):
         intervalo = []
@@ -152,24 +156,30 @@ for grupo in GRUPOS_M :
 model.addConstrs(x[curso,dia,interrogacion] == 1 for (curso,dia,interrogacion) in PRUEBAS_PREASIGNADAS)
 
 #No permite cursos que sólo asignen una de sus pruebas
-model.addConstrs(quicksum(z[curso,interrogacion] for i in CONJUNTO_INTERROGACIONES[curso]) == len(CONJUNTO_INTERROGACIONES[curso])*z[curso, 1] for curso in cursos)
+model.addConstrs(quicksum(z[curso,interrogacion] for interrogacion in CONJUNTO_INTERROGACIONES[curso]) == len(CONJUNTO_INTERROGACIONES[curso])*z[curso, 1] for curso in cursos)
 
-#
+#Restriccion 2 dias consecutivos sin pruebas
+model.addConstr(quicksum(a[j] for j in J) == 1)
+
+model.addConstrs(quicksum(quicksum(x[curso,dia,interrogacion] for dia in range(diasem+j,diasem+j+2) if dia in fechas_calendario[curso]) 
+                          for curso in cursos for interrogacion in CONJUNTO_INTERROGACIONES[curso]) <= len(cursos)*2*3*(1-a[j]) for j in J) 
+#*2*3 para compensar por la suma sobre 2 dias, 3 interrogaciones max
 
 
 model.write("modelo.lp")
 
 #intento hacer multiobjetivo
 #Minimiza por defecto, por lo que no se indica GRB.MINIMIZE
+#minimiza vacantes que quedan sin prueba
 model.setObjectiveN(quicksum(z[curso, interrogacion] * vacantes[curso] for curso in cursos for interrogacion in CONJUNTO_INTERROGACIONES[curso]), 
                     index = 0, priority = 10, name = "Obj1" )
+#minimiza vacantes asignadas antes/despues de las fechas deseadas
+model.setObjectiveN(quicksum(quicksum(x[curso,dia,1]*vacantes[curso]*(dia-dia_retiro) for dia in fechas_calendario[curso] if dia >= dia_retiro) +
+                    quicksum(x[curso,dia,2]*vacantes[curso]*(dia_i2-dia) for dia in fechas_calendario[curso] if dia <= dia_i2) for curso in cursos),
+                   index = 1, priority = 8, name = "Obj2")
 
-model.setObjectiveN(quicksum(quicksum(x[curso,dia,1]*vacantes[curso]*dia for dia in fechas_calendario[curso] if dia >= dia_retiro) +
-                     quicksum(x[curso,dia,2]*vacantes[curso]*dia for dia in fechas_calendario[curso] if dia <= dia_i2) for curso in cursos),
-                    index = 1, priority = 8, name = "Obj2")
-
-#model.setObjectiveN(quicksum(x[curso,dia,1]*vacantes[curso]*dia for curso in cursos for dia in fechas_calendario[curso] if dia >= dia_retiro),
-#                    index = 1, priority = 1, name = "Obj2")
+# model.setObjectiveN(quicksum(x[curso,dia,1]*vacantes[curso]*dia for curso in cursos for dia in fechas_calendario[curso] if dia >= dia_retiro),
+#                     index = 1, priority = 8, name = "Obj2")
 
 model.optimize()
 
