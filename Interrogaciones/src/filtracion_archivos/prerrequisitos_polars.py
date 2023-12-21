@@ -1,7 +1,7 @@
 import polars as pl
 
 
-def cursos_ingenieria_polars(path_excel_cursos: str, incluir_mat, incluir_fis_y_qim, identificadores_fmat, identificadores_fis_y_qim) -> pl.DataFrame: 
+def cursos_ingenieria_polars(path_excel_cursos: str, incluir_mat: bool, incluir_fis_y_qim: bool, identificadores_fmat: list, identificadores_fis_y_qim: list) -> pl.DataFrame: 
     """Retorna los cursos de Ingeniería junto con sus prerrequisitos y su sigla correspondiente.
         Si se agrega, incluye cursos de MAT, FIS y QIM
     Args:

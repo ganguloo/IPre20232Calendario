@@ -54,6 +54,7 @@ def main(crear_parametros_ies=True, crear_parametros_fechas=True):
     anadir_arcos_transitividad(grafo_prerrequisitos)
     logging.info(f"El grafo de prerrequisitos luego de la transitividad es {grafo_prerrequisitos}")
     arcos_nuevos = nuevos_arcos(grafo_prerrequisitos)  # Funciona bien.
+    # print(nx.nodes(grafo_prerrequisitos))
     # dibujar_grafo("grafo_prerrequisitos_ing", grafo_prerrequisitos)
     # -------- GRAFO MÓDULOS -------
     cursos_ing_ies = cursos_con_pruebas(PATH_CURSOS_IES)
@@ -74,7 +75,6 @@ def main(crear_parametros_ies=True, crear_parametros_fechas=True):
     # sys.exit()
     macrosecciones = cursos_con_macroseccion(cursos_con_horario)
 
-    #print(macrosecciones)
 
     # Tener cuidado, porque se repite ICT3113-2, revisar si tiene clases en días distintos
     cursos_pertenecientes_a_macroseccion = set(itertools.

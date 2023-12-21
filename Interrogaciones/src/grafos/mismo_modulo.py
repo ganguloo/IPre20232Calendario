@@ -76,6 +76,7 @@ def reemplazar_siglas_con_macrosecciones(grafo_tope_horario: nx.classes.graph.Gr
 
     macrosecciones_tope_horario = dict()
     lista_nodos = list(grafo_tope_horario.nodes)
+    macrosecciones_sin_topes = list()
 
     for macroseccion, value in macrosecciones_y_ramos_sigla.items():
         lista_vecinos = list()
@@ -87,7 +88,6 @@ def reemplazar_siglas_con_macrosecciones(grafo_tope_horario: nx.classes.graph.Gr
                 vecinos = grafo_tope_horario.neighbors(sigla_seccion)
                 lista_vecinos.extend(vecinos)
                 # lista_vecinos += vecinos
-            print(f"{macroseccion} con lista de vecinos: {lista_vecinos}")
 
         if len(lista_vecinos) != 0:
             if macroseccion not in macrosecciones_tope_horario.keys():
@@ -95,8 +95,16 @@ def reemplazar_siglas_con_macrosecciones(grafo_tope_horario: nx.classes.graph.Gr
             else:
                 macrosecciones_tope_horario[macroseccion] = macrosecciones_tope_horario[macroseccion].extend(
                     lista_vecinos)
-            nombre = "reemplazar_siglas_con_macrosecciones"        
+        elif len(lista_vecinos) == 0 :
+            macrosecciones_sin_topes.append(macroseccion)
+
+        nombre = "reemplazar_siglas_con_macrosecciones"        
+        if len(lista_vecinos) != 0 :
             logging.debug(f"[Función: {nombre}]: {macroseccion} tiene de vecinos a {macrosecciones_tope_horario[macroseccion]}")
+        elif len(lista_vecinos) == 0 :
+            logging.debug(f"[Función: {nombre}]: {macroseccion} no tiene vecinos")
+
+    
 
     lista_nodos = list(grafo_tope_horario.nodes)
     for nodo in cursos_a_eliminar:
@@ -106,6 +114,9 @@ def reemplazar_siglas_con_macrosecciones(grafo_tope_horario: nx.classes.graph.Gr
     for macroseccion, siglas in macrosecciones_tope_horario.items():
         for sigla in siglas:
             grafo_tope_horario.add_edge(macroseccion, sigla)
+
+    for macroseccion in macrosecciones_sin_topes :
+        grafo_tope_horario.add_node(macroseccion)
 
     return grafo_tope_horario
 
