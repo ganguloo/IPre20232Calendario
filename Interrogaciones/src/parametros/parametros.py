@@ -1,5 +1,5 @@
 import os
-from datos.conversion_excel_parametros import fechas_prohibidas, excel_cursos_coordinados, mapeo_fechas
+from datos.conversion_excel_parametros import fechas_prohibidas, excel_cursos_coordinados, mapeo_fechas, mapeo
 
 PATH_LISTADO_NRC = os.path.join("excel_horarios",
                                  "Prueba_nrc.xlsx")
@@ -56,7 +56,7 @@ DELTAMIN = 28
 DELTAMAX = 63
 VACANTES = 2000
 
-SEMANA_LICENCIATURA = mapeo_fechas(PATH_PARAMETROS, "Fechas", "H1")
+SEMANA_LICENCIATURA = mapeo(PATH_PARAMETROS, "Fechas", "H1")
 
 #siglas fmat, fis y qim hardcodeadas en filtracion_archivos modulos_mod_dipre
 
