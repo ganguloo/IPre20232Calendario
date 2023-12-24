@@ -28,7 +28,7 @@ from grafos.prerrequisito import anadir_arcos_transitividad, grafo_prerrequisito
 from grafos.drawing import dibujar_grafo
 
 from parametros.parametros import (PATH_CURSOS_IES, PATH_LISTADO_NRC,PATH_LISTADO_NRC_ORIGINAL,PATH_CURSOS_IES_ORIGINAL, PATH_MATERIAS,
-                                   IDENTIFICADORES_FMAT, FECHAS_PROHIBIDAS_FMAT, CURSOS_3_IES, CURSOS_COORDINADOS, SEC_COORDINADAS,
+                                   IDENTIFICADORES_FMAT, CURSOS_3_IES, CURSOS_COORDINADOS, SEC_COORDINADAS,
                                    INCLUIR_FIS_Y_QIM, INCLUIR_MAT, IDENTIFICADORES_FIS_Y_QIM)
 
 from datos.generacion_calendario import generacion_calendario
