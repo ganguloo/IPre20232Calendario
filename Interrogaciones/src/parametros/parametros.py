@@ -20,8 +20,6 @@ PATH_LISTADO_CURSOS = os.path.join("instancia_datos", "listado_cursos.xlsx")
 NUM_EXPERIMENTO = 2
 
 
-IDENTIFICADORES_FMAT = ["MAT1640", "MAT1630", "MAT1620", "MAT1610","MAT1207","EYP1113", "MAT1203"]
-# IDENTIFICADORES_FMAT = ["EYP_MOD", "XN_MOD", "WV_MOD", "YF_MOD", "GCH_MOD", "ED_MOD"]
 
 FECHAS_PROHIBIDAS_MARZO_GENERAL = ["06-Mar", "07-Mar", "08-Mar", "09-Mar", "10-Mar",
                                    "11-Mar", "12-Mar", "13-Mar", "14-Mar", "15-Mar",
@@ -109,7 +107,7 @@ CURSOS_3_IES = ["MAT1640_Coordinado - Macroseccion","MAT1630_Coordinado - Macros
 
 DIA_FECHA_RETIRO_CURSOS = "" #Se debe llevar a la línea temporal numérica
 
-DIA_FECHA_RETIRO_CURSOS = ""
+SEMANA_LICENCIATURA = 11
 
 #Algunos parametros del modelo
 DELTAMIN = 28
@@ -117,3 +115,13 @@ DELTAMAX = 63
 VACANTES = 2000
 
 SEMANA_LICENCIATURA = 11
+
+#siglas fmat, fis y qim hardcodeadas en filtracion_archivos modulos_mod_dipre
+
+INCLUIR_MAT = True
+INCLUIR_FIS_Y_QIM = True
+
+IDENTIFICADORES_FMAT = ["MAT1640", "MAT1630", "MAT1620", "MAT1610","MAT1207","EYP1113", "MAT1203"]
+# IDENTIFICADORES_FMAT = ["EYP_MOD", "XN_MOD", "WV_MOD", "YF_MOD", "GCH_MOD", "ED_MOD"]
+
+IDENTIFICADORES_FIS_Y_QIM = ["FIS1514", "FIS1523", "FIS1533", "QIM100E"]

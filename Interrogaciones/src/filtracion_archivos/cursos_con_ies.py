@@ -19,3 +19,31 @@ def cursos_con_pruebas(path_excel,
     siglas_validas = cursos.select("Sigla").unique()
     siglas_validas = siglas_validas["Sigla"].to_list()
     return siglas_validas
+
+def cursos_mat_con_pruebas(path_nrc,columnas_interes=["Escuela", "Nombre Curso", "Sigla"],siglas_fmat = []) -> list: 
+
+    cursos = pl.read_excel(path_nrc, read_csv_options={"infer_schema_length": 3000})
+    new_columns = {col: col.strip() for col in cursos.columns}
+
+    cursos = (cursos.rename(new_columns)
+              .with_columns((pl.col("Materia") + pl.col("Número Curso").cast(str)).alias("Sigla"))
+              .select(columnas_interes)
+              .filter((pl.col("Escuela") == '06 - Matemáticas') & (pl.col("Sigla").is_in(siglas_fmat))))
+
+    siglas_validas = cursos.select("Sigla").unique()
+    siglas_validas = siglas_validas["Sigla"].to_list()
+    return siglas_validas
+
+def cursos_fisqim_con_pruebas(path_nrc,columnas_interes=["Escuela", "Nombre Curso", "Sigla"],siglas_fisqim = []) -> list: 
+
+    cursos = pl.read_excel(path_nrc, read_csv_options={"infer_schema_length": 3000})
+    new_columns = {col: col.strip() for col in cursos.columns}
+
+    cursos = (cursos.rename(new_columns)
+              .with_columns((pl.col("Materia") + pl.col("Número Curso").cast(str)).alias("Sigla"))
+              .select(columnas_interes)
+              .filter(((pl.col("Escuela") == '03 - Física') |(pl.col("Escuela") == '10 - Química')) & (pl.col("Sigla").is_in(siglas_fisqim))))
+
+    siglas_validas = cursos.select("Sigla").unique()
+    siglas_validas = siglas_validas["Sigla"].to_list()
+    return siglas_validas

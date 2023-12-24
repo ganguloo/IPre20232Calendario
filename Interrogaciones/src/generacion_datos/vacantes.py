@@ -3,7 +3,8 @@ import pandas as pd
 
 from filtracion_archivos.modulos import cursos_y_horario, cursos_y_horario_polars
 from filtracion_archivos.modulos_mod_dipre import cursos_mod_dipre
-from parametros.parametros import PATH_LISTADO_NRC, PATH_VACANTES
+from parametros.parametros import (PATH_LISTADO_NRC, PATH_VACANTES, IDENTIFICADORES_FIS_Y_QIM,
+                                   IDENTIFICADORES_FMAT, INCLUIR_FIS_Y_QIM, INCLUIR_MAT)
 
 
 def guardar_vacantes(grafo_modulos,
@@ -16,7 +17,10 @@ def guardar_vacantes(grafo_modulos,
     # vacantes_dataframe = cursos_y_horario(path, columnas)
     # vacantes_dataframe = vacantes_dataframe.filter(["Sigla_Seccion",
     # "Vacantes Ofrecidas"])
-    vacantes_dataframe = cursos_mod_dipre(path, cursos_ing_ies)
+    vacantes_dataframe = cursos_mod_dipre(path, cursos_ing_ies, incluir_fmat = INCLUIR_MAT, 
+                                          incluir_fis_y_qim = INCLUIR_FIS_Y_QIM, 
+                                          identificadores_fmat = IDENTIFICADORES_FMAT, 
+                                          identificadores_fis_y_qim = IDENTIFICADORES_FIS_Y_QIM)
     # vacantes_dataframe = cursos_y_horario_polars(path_excel_listado_nrc=path)
     vacantes_dataframe = vacantes_dataframe.select(["Sigla_Seccion",
                                                     "Vacantes Ofrecidas"]).to_pandas()

@@ -14,7 +14,8 @@ from filtracion_archivos.modulos import (cursos_y_horario,
                                          cursos_con_macroseccion)
 
 from filtracion_archivos.modulos_mod_dipre import cursos_mod_dipre
-from filtracion_archivos.cursos_con_ies import cursos_con_pruebas
+from filtracion_archivos.cursos_con_ies import (cursos_con_pruebas, cursos_mat_con_pruebas,
+                                                cursos_fisqim_con_pruebas)
 
 from generacion_datos.conexiones import guardado_conexiones
 from generacion_datos.cursos import guardado_cursos
@@ -27,8 +28,8 @@ from grafos.prerrequisito import anadir_arcos_transitividad, grafo_prerrequisito
 from grafos.drawing import dibujar_grafo
 
 from parametros.parametros import (PATH_CURSOS_IES, PATH_LISTADO_NRC,PATH_LISTADO_NRC_ORIGINAL,PATH_CURSOS_IES_ORIGINAL, PATH_MATERIAS,
-                                   IDENTIFICADORES_FMAT, FECHAS_PROHIBIDAS_FMAT, CURSOS_3_IES,
-                                   CURSOS_COORDINADOS, SEC_COORDINADAS)
+                                   IDENTIFICADORES_FMAT, FECHAS_PROHIBIDAS_FMAT, CURSOS_3_IES, CURSOS_COORDINADOS, SEC_COORDINADAS,
+                                   INCLUIR_FIS_Y_QIM, INCLUIR_MAT, IDENTIFICADORES_FIS_Y_QIM)
 
 from datos.generacion_calendario import generacion_calendario
 
@@ -42,9 +43,9 @@ def main(crear_parametros_ies=True, crear_parametros_fechas=True):
 
     # -------- GRAFO PRERREQUISITOS -------
     start_time = time.time() #Creo que se debe mover arriba
-    dataframe_ing = cursos_ingenieria_polars(PATH_MATERIAS)  # Funciona bien
+    dataframe_ing = cursos_ingenieria_polars(PATH_MATERIAS, INCLUIR_MAT, INCLUIR_FIS_Y_QIM, IDENTIFICADORES_FMAT, IDENTIFICADORES_FIS_Y_QIM)  # Funciona bien
 
-    cursos = diccionario_cursos_y_prerrequisitos(dataframe_ing)
+    cursos = diccionario_cursos_y_prerrequisitos(dataframe_ing, PATH_MATERIAS)
     grafo_prerrequisitos = grafo_prerrequisito(cursos)
     # Se hace para que el arco vaya del prerrequisito al ramo
     # grafo_prerrequisitos = grafo_prerrequisitos.reverse() # Esto ya estaba en la función de grafo_prerrequito
@@ -53,20 +54,27 @@ def main(crear_parametros_ies=True, crear_parametros_fechas=True):
     anadir_arcos_transitividad(grafo_prerrequisitos)
     logging.info(f"El grafo de prerrequisitos luego de la transitividad es {grafo_prerrequisitos}")
     arcos_nuevos = nuevos_arcos(grafo_prerrequisitos)  # Funciona bien.
+    # print(nx.nodes(grafo_prerrequisitos))
     # dibujar_grafo("grafo_prerrequisitos_ing", grafo_prerrequisitos)
     # -------- GRAFO MÓDULOS -------
     cursos_ing_ies = cursos_con_pruebas(PATH_CURSOS_IES)
+    if INCLUIR_MAT:
+        cursos_mat = cursos_mat_con_pruebas(PATH_LISTADO_NRC, siglas_fmat=IDENTIFICADORES_FMAT)
+        for j in cursos_mat:
+            cursos_ing_ies.append(j)
+    if INCLUIR_FIS_Y_QIM:
+        cursos_fisqim = cursos_fisqim_con_pruebas(PATH_LISTADO_NRC, siglas_fisqim=IDENTIFICADORES_FIS_Y_QIM)
+        for j in cursos_fisqim:
+            cursos_ing_ies.append(j)
     # cursos_con_horario = cursos_y_horario(path_excel_nrc)
     # cursos_con_horario = cursos_y_horario_polars(path_excel_nrc, cursos_ing_ies)
     cursos_con_horario = cursos_mod_dipre(
-        PATH_LISTADO_NRC, cursos_ing_ies).to_pandas()
+        PATH_LISTADO_NRC, cursos_ing_ies, incluir_fmat=INCLUIR_MAT, incluir_fis_y_qim=INCLUIR_FIS_Y_QIM,
+        identificadores_fmat=IDENTIFICADORES_FMAT, identificadores_fis_y_qim= IDENTIFICADORES_FIS_Y_QIM).to_pandas()
     # cursos_con_horario.to_excel("ramos_ing_ies.xlsx", index=False)
     # sys.exit()
-    # Ver lo de las macrosecciones. Por ejemplo, opti no aparece, pues las cátedras no están agrupadas como macrosección
-    # pero si bajo la misma lista cruzada
     macrosecciones = cursos_con_macroseccion(cursos_con_horario)
 
-    #print(macrosecciones)
 
     # Tener cuidado, porque se repite ICT3113-2, revisar si tiene clases en días distintos
     cursos_pertenecientes_a_macroseccion = set(itertools.
