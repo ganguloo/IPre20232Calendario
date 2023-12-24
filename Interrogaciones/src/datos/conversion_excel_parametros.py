@@ -44,3 +44,20 @@ def fijar_interrogaciones(excel_file, sheet):
 
     # Return the list of lists
     return first_three_columns_data
+
+
+def mapeo_fechas(file_path, sheet_name, cell):
+    # Read the entire sheet using pandas
+    data = pd.read_excel(file_path, sheet_name=sheet_name)
+
+    # Convert cell reference to row and column index
+    row_idx = int(cell[1:]) - 1
+    col_idx = ord(cell[0].upper()) - ord('A')
+
+    # Extract the value from the DataFrame
+    fecha_retiro = data.iat[row_idx, col_idx]
+    fecha_inicio_clases = datetime(2023, 3, 6)
+
+    dias = (fecha_retiro - fecha_inicio_clases).days
+
+    return dias
