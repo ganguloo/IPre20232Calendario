@@ -1,5 +1,5 @@
 import os
-from datos.conversion_excel_parametros import fechas_prohibidas, excel_cursos_coordinados
+from datos.conversion_excel_parametros import fechas_prohibidas, excel_cursos_coordinados, mapeo_fechas, mapeo
 
 PATH_LISTADO_NRC = os.path.join("excel_horarios",
                                  "Prueba_nrc.xlsx")
@@ -32,7 +32,8 @@ CURSOS_COORDINADOS = excel_cursos_coordinados(PATH_PARAMETROS, "Cursos Coordinad
 #Formato: si cursos todos coordinados: (curso (str), fecha (int), nr de prueba(int)) ¡La fecha debe ser en línea de tiempo real!
 PRUEBAS_PREASIGNADAS = excel_cursos_coordinados(PATH_PARAMETROS, "Interrogaciones Fijas")
 
-
+DIA_FECHA_RETIRO_CURSOS = mapeo_fechas(PATH_PARAMETROS, "Fechas", "D1")
+DIA_I2 = mapeo_fechas(PATH_PARAMETROS, "Fechas", "F1")
 
 
 GRUPOS = [["MAT1620","FIS1514","IIC1103"],["MAT1620","ICE1514","IIC1103"],["MAT1630","FIS1523","MAT1640"],["MAT1630","IIQ1003","MAT1640"],
@@ -50,14 +51,12 @@ CURSOS_3_IES = ["MAT1640_Coordinado - Macroseccion","MAT1630_Coordinado - Macros
 #["EYP_MOD_MS1 - Macroseccion 1", "XN_MOD_MS1 - Macroseccion 1", "YF_MOD_MS1 - Macroseccion 1", "GCH_MOD_MS1 - Macroseccion 1", 
                 #"ED_MOD_MS1 - Macroseccion 1", "WV_MOD_MS1 - Macroseccion 1"]
 
-DIA_FECHA_RETIRO_CURSOS = "" #Se debe llevar a la línea temporal numérica
-
 #Algunos parametros del modelo
 DELTAMIN = 28
 DELTAMAX = 63
 VACANTES = 2000
 
-SEMANA_LICENCIATURA = 11
+SEMANA_LICENCIATURA = mapeo(PATH_PARAMETROS, "Fechas", "H1")
 
 #siglas fmat, fis y qim hardcodeadas en filtracion_archivos modulos_mod_dipre
 
