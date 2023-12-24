@@ -161,7 +161,7 @@ def main(crear_parametros_ies=True, crear_parametros_fechas=True):
                                       for i in IDENTIFICADORES_FMAT)
                 
                 if curso_fmat_bool:
-                    fechas_validas, *others = generacion_calendario(dias_prohibidos=FECHAS_PROHIBIDAS_FMAT)
+                    fechas_validas, *others = generacion_calendario(fmat=True)
 
                 if "Macrosección" in curso:
                     curso = curso.replace("Macrosección", "Macroseccion")
