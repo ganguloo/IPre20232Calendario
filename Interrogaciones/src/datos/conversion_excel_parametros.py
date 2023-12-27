@@ -71,6 +71,6 @@ def mapeo(file_path, sheet_name, cell):
     col_idx = ord(cell[0].upper()) - ord('A')
 
     # Extract the value from the DataFrame
-    valor = data.iat[row_idx, col_idx]
+    valor = int(data.iat[row_idx, col_idx])
 
     return valor
