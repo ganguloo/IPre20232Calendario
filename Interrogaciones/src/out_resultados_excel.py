@@ -4,7 +4,9 @@ from modelo_optimizacion.cargar_datos.cargar_vacantes import cargar_vacantes
 from filtracion_archivos.modulos_mod_dipre import cursos_mod_dipre
 from filtracion_archivos.cursos_con_ies import cursos_con_pruebas
 from filtracion_archivos.modulos import cursos_con_macroseccion
-from parametros.parametros import (PATH_CURSOS_IES, PATH_LISTADO_NRC)
+from parametros.parametros import (PATH_CURSOS_IES, PATH_LISTADO_NRC,PATH_LISTADO_NRC_ORIGINAL,PATH_CURSOS_IES_ORIGINAL, PATH_MATERIAS,
+                                   IDENTIFICADORES_FMAT, CURSOS_3_IES, CURSOS_COORDINADOS, SEC_COORDINADAS,
+                                   INCLUIR_FIS_Y_QIM, INCLUIR_MAT, IDENTIFICADORES_FIS_Y_QIM)
 
 
 
@@ -12,9 +14,20 @@ fechas_validas, mapeo_fechas, fechas = generacion_calendario()
 fechas_actualizado = organizacion_datos_interrogaciones(mapeo_fechas, "resultados_rest_vacantes.txt")
 vacantes = cargar_vacantes()
 cursos_ing_ies = cursos_con_pruebas(PATH_CURSOS_IES)
-cursos_con_horario = cursos_mod_dipre(PATH_LISTADO_NRC, cursos_ing_ies).to_pandas()
+# cursos_con_horario = cursos_mod_dipre(PATH_LISTADO_NRC, cursos_ing_ies).to_pandas()
+
+cursos_con_horario = cursos_mod_dipre(
+    PATH_LISTADO_NRC, cursos_ing_ies, incluir_fmat=INCLUIR_MAT, incluir_fis_y_qim=INCLUIR_FIS_Y_QIM,
+    identificadores_fmat=IDENTIFICADORES_FMAT, identificadores_fis_y_qim= IDENTIFICADORES_FIS_Y_QIM).to_pandas()
+
+
+
 macrosecciones = cursos_con_macroseccion(cursos_con_horario)
-vacantes_dataframe = cursos_mod_dipre(PATH_LISTADO_NRC, cursos_ing_ies)
+
+vacantes_dataframe = cursos_mod_dipre(PATH_LISTADO_NRC, cursos_ing_ies, incluir_fmat = INCLUIR_MAT, 
+                                        incluir_fis_y_qim = INCLUIR_FIS_Y_QIM, 
+                                        identificadores_fmat = IDENTIFICADORES_FMAT, 
+                                        identificadores_fis_y_qim = IDENTIFICADORES_FIS_Y_QIM)
 vacantes_dataframe = vacantes_dataframe.select(["Sigla_Seccion", "Vacantes Ofrecidas"]).to_pandas()
 vacantes_sigla_seccion = dict(vacantes_dataframe.values)
 
